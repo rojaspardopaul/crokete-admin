@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
 import React, { useContext, useRef, useState } from "react";
 import { FiPrinter, FiMail } from "react-icons/fi";

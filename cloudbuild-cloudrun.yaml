@@ -1,0 +1,62 @@
+steps:
+  # Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-f'
+      - 'Dockerfile-cloudrun'
+      - '-t'
+      - 'us-south1-docker.pkg.dev/crokete/backend-repo/admin-image:latest'
+      - '--build-arg'
+      - 'VITE_APP_API_BASE_URL=https://backend-service-704205683434.us-south1.run.app/v1'
+      - '--build-arg'
+      - 'VITE_APP_STORE_DOMAIN=https://crokete.com.mx'
+      - '--build-arg'
+      - 'VITE_APP_API_SOCKET_URL=https://backend-service-704205683434.us-south1.run.app'
+      - '--build-arg'
+      - 'VITE_APP_ADMIN_DOMAIN=https://admin.crokete.com.mx'
+      - '--build-arg'
+      - 'VITE_APP_CLOUD_NAME=dr397rg7u'
+      - '--build-arg'
+      - 'VITE_APP_CLOUDINARY_API_KEY=419969345985788'
+      - '--build-arg'
+      - 'VITE_APP_CLOUDINARY_API_SECRET=d4GnPnY66i38eXJISz9mslNV7C4'
+      - '--build-arg'
+      - 'VITE_APP_CLOUDINARY_UPLOAD_PRESET=crokete_upload_preset'
+      - '--build-arg'
+      - 'VITE_APP_CLOUDINARY_URL=https://api.cloudinary.com/v1_1/dr397rg7u/image/upload'
+      - '--build-arg'
+      - 'VITE_APP_MYMEMORY_API_KEY=a91efbf362a6e399453d'
+      - '--build-arg'
+      - 'VITE_APP_ENCRYPT_PASSWORD=856305f1a5b7ba87b8448e69b3bb7a4631c23f0afa2ca5331fa1373f7e372345'
+      - '.'
+
+  # Push to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'us-south1-docker.pkg.dev/crokete/backend-repo/admin-image:latest'
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'admin-service'
+      - '--image=us-south1-docker.pkg.dev/crokete/backend-repo/admin-image:latest'
+      - '--region=us-south1'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--memory=512Mi'
+      - '--cpu=1'
+      - '--port=8080'
+
+images:
+  - 'us-south1-docker.pkg.dev/crokete/backend-repo/admin-image:latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8'
+
+timeout: '1800s'

@@ -64,9 +64,9 @@ const Card = ({ id, image, index, moveCard, handleRemoveImage }) => {
   drag(drop(ref));
   return (
     <div ref={ref} data-handler-id={handlerId}>
-      <div className="relative">
+      <div className="relative inline-block">
         <img
-          className="inline-flex border rounded-md border-gray-100 dark:border-gray-600 w-24 max-h-24 p-2 m-2"
+          className="border rounded-md border-gray-100 dark:border-gray-600 max-w-24 max-h-24 h-auto object-contain p-2 m-2"
           src={image}
           alt="product"
         />

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -70,26 +70,26 @@ const ResetPassword = () => {
               </h1>
 
               <form onSubmit={handleSubmit(submitHandler)}>
-                <LabelArea label="Password" />
+                <LabelArea label="Contraseña" />
                 <Input
-                  label="Password"
+                  label="Contraseña"
                   name="newPassword"
                   type="password"
                   autoComplete="current-password"
-                  placeholder="Password"
+                  placeholder="Contraseña"
                   {...register("newPassword", {
-                    required: "You must specify a password",
+                    required: "Debe especificar una contraseña",
                     minLength: {
                       value: 10,
-                      message: "Password must have at least 10 characters",
+                      message: "La contraseña debe tener al menos 10 caracteres",
                     },
                   })}
                 />
                 <Error errorName={errors.newPassword} />
                 <div className="mt-6"></div>
-                <LabelArea label="Confirm Password" />
+                <LabelArea label="Confirmar Contraseña" />
                 <Input
-                  label="Confirm Password"
+                  label="Confirmar Contraseña"
                   name="confirm_password"
                   type="password"
                   autoComplete="current-password"
@@ -97,7 +97,7 @@ const ResetPassword = () => {
                   {...register("confirm_password", {
                     validate: (value) =>
                       value === password.current ||
-                      "The passwords do not match",
+                      "Las contraseñas no coinciden",
                   })}
                 />
                 <Error errorName={errors.confirm_password} />

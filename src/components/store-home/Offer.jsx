@@ -96,6 +96,8 @@ const Offer = ({
                 <Uploader
                   imageUrl={offersHeaderBg}
                   setImageUrl={setOffersHeaderBg}
+                  targetWidth={1920}
+                  targetHeight={400}
                 />
               </div>
             </div>

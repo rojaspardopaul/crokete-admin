@@ -192,8 +192,8 @@ const HomePage = ({
                 <Uploader
                   imageUrl={headerLogo}
                   setImageUrl={setHeaderLogo}
-                  targetWidth={87}
-                  targetHeight={25}
+                  targetWidth={300}
+                  targetHeight={100}
                 />
               </div>
             </div>
@@ -1438,6 +1438,8 @@ const HomePage = ({
                   <Uploader
                     imageUrl={quickSectionImage}
                     setImageUrl={setQuickSectionImage}
+                    targetWidth={600}
+                    targetHeight={400}
                   />
                 </div>
               </div>
@@ -1608,6 +1610,8 @@ const HomePage = ({
                   <Uploader
                     imageUrl={getYourDailyNeedImageLeft}
                     setImageUrl={setGetYourDailyNeedImageLeft}
+                    targetWidth={400}
+                    targetHeight={400}
                   />
                 </div>
               </div>
@@ -1620,6 +1624,8 @@ const HomePage = ({
                   <Uploader
                     imageUrl={getYourDailyNeedImageRight}
                     setImageUrl={setGetYourDailyNeedImageRight}
+                    targetWidth={400}
+                    targetHeight={400}
                   />
                 </div>
               </div>
@@ -1632,6 +1638,8 @@ const HomePage = ({
                   <Uploader
                     imageUrl={getButton1image}
                     setImageUrl={setGetButton1image}
+                    targetWidth={200}
+                    targetHeight={60}
                   />
                 </div>
               </div>
@@ -1660,6 +1668,8 @@ const HomePage = ({
                   <Uploader
                     imageUrl={getButton2image}
                     setImageUrl={setGetButton2image}
+                    targetWidth={200}
+                    targetHeight={60}
                   />
                 </div>
               </div>
@@ -2285,7 +2295,12 @@ const HomePage = ({
                   {t("FooterLogo")}
                 </label>
                 <div className="sm:col-span-4">
-                  <Uploader imageUrl={footerLogo} setImageUrl={setFooterLogo} />
+                  <Uploader 
+                    imageUrl={footerLogo} 
+                    setImageUrl={setFooterLogo}
+                    targetWidth={300}
+                    targetHeight={100}
+                  />
                 </div>
               </div>
 

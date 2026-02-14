@@ -94,7 +94,12 @@ const Faq = ({
                 {t("PageHeaderBg")}
               </label>
               <div className="sm:col-span-4">
-                <Uploader imageUrl={faqHeaderBg} setImageUrl={setFaqHeaderBg} />
+                <Uploader 
+                  imageUrl={faqHeaderBg} 
+                  setImageUrl={setFaqHeaderBg}
+                  targetWidth={1920}
+                  targetHeight={400}
+                />
               </div>
             </div>
 
@@ -150,6 +155,8 @@ const Faq = ({
               <Uploader
                 imageUrl={faqLeftColImage}
                 setImageUrl={setFaqLeftColImage}
+                targetWidth={600}
+                targetHeight={800}
               />
             </div>
           </div>

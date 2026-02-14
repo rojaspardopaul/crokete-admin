@@ -14,12 +14,14 @@ import logoLight from "@/assets/img/logo/logo-dark.svg";
 import { AdminContext } from "@/context/AdminContext";
 import SidebarSubMenu from "@/components/sidebar/SidebarSubMenu";
 import useGetCData from "@/hooks/useGetCData";
+import useUtilsFunction from "@/hooks/useUtilsFunction";
 
 const SidebarContent = () => {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { dispatch } = useContext(AdminContext);
   const { accessList } = useGetCData();
+  const { storeCustomizationSetting } = useUtilsFunction();
 
   const handleLogOut = () => {
     dispatch({ type: "USER_LOGOUT" });
@@ -51,7 +53,13 @@ const SidebarContent = () => {
   return (
     <div className="py-4 text-gray-500 dark:text-gray-400">
       <a className=" text-gray-900 dark:text-gray-200" href="/dashboard">
-        {theme === "dark" ? (
+        {storeCustomizationSetting?.footer?.block4_logo ? (
+          <img 
+            src={storeCustomizationSetting.footer.block4_logo} 
+            alt="logo" 
+            className="pl-6 h-auto w-auto max-w-[180px] max-h-16 object-contain" 
+          />
+        ) : theme === "dark" ? (
           <img src={logoLight} alt="kachabazar" width="135" className="pl-6" />
         ) : (
           <img src={logoDark} alt="kachabazar" width="135" className="pl-6" />

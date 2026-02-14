@@ -44,8 +44,7 @@ const Login = () => {
                 <InputArea
                   required
                   register={register}
-                  defaultValue="admin@gmail.com"
-                  label="Email"
+                  label="Correo"
                   name="email"
                   type="email"
                   autoComplete="username"
@@ -59,8 +58,7 @@ const Login = () => {
                 <InputArea
                   required
                   register={register}
-                  defaultValue="12345678"
-                  label="Password"
+                  label="Contraseña"
                   name="password"
                   type="password"
                   autoComplete="current-password"
@@ -79,21 +77,6 @@ const Login = () => {
                   {loading ? "Loading..." : t("LoginTitle")}
                 </Button>
               </form>
-
-              <div className="mt-6 flex flex-col space-y-2">
-                <Link
-                  className="text-sm font-medium text-emerald-500 dark:text-emerald-400 hover:underline"
-                  to="/forgot-password"
-                >
-                  {t("ForgotPassword")}
-                </Link>
-                <Link
-                  className="text-sm font-medium text-emerald-500 dark:text-emerald-400 hover:underline"
-                  to="/signup"
-                >
-                  {t("CreateAccountTitle")}
-                </Link>
-              </div>
             </div>
           </main>
         </div>

@@ -124,6 +124,8 @@ const AboutUs = ({
                   <Uploader
                     imageUrl={aboutHeaderBg}
                     setImageUrl={setAboutHeaderBg}
+                    targetWidth={1920}
+                    targetHeight={400}
                   />
                 </div>
               </div>

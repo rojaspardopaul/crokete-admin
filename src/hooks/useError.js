@@ -25,10 +25,13 @@ const useError = () => {
 
       // notifyError("Your Session is expired! Please Click on Login again");
       const timeoutId = setTimeout(() => {
-        // history?.replace(`/login`);
-        window.location.replace(
-          `https://${import.meta.env.VITE_APP_ADMIN_DOMAIN}/login`
-        );
+        const adminDomain = import.meta.env.VITE_APP_ADMIN_DOMAIN;
+        const adminLogin = adminDomain
+          ? adminDomain.startsWith("http")
+            ? `${adminDomain.replace(/\/$/, "")}/login`
+            : `https://${adminDomain.replace(/\/$/, "")}/login`
+          : "/login";
+        window.location.replace(adminLogin);
       }, 2500);
       return () => clearTimeout(timeoutId);
     } else {

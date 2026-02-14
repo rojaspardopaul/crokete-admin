@@ -16,7 +16,7 @@ const Uploader = ({
   setImageUrl,
   imageUrl,
   product,
-  folder = "kachabazar",
+  folder = "crokete",
   targetWidth = 800, // Set default fixed width
   targetHeight = 800, // Set default fixed height
 }) => {
@@ -28,16 +28,21 @@ const Uploader = ({
 
   const { getRootProps, getInputProps, fileRejections } = useDropzone({
     accept: {
-      "image/*": [".jpeg", ".jpg", ".png", ".webp"],
+      "image/*": [".jpeg", ".jpg", ".png", ".webp", ".svg"],
     },
     multiple: product ? true : false,
     maxSize: 5242880, // 5 MB in bytes
     maxFiles: globalSetting?.number_of_image_per_product || 2,
     onDrop: async (acceptedFiles) => {
       const resizedFiles = await Promise.all(
-        acceptedFiles.map((file) =>
-          resizeImageToFixedDimensions(file, targetWidth, targetHeight)
-        )
+        acceptedFiles.map((file) => {
+          // If file is SVG, return it without resizing
+          if (file.type === "image/svg+xml") {
+            return Promise.resolve(file);
+          }
+          // For other image types, resize while maintaining aspect ratio
+          return resizeImageMaintainAspectRatio(file, targetWidth, targetHeight);
+        })
       );
       setFiles(
         resizedFiles.map((file) =>
@@ -49,15 +54,42 @@ const Uploader = ({
     },
   });
 
-  const resizeImageToFixedDimensions = async (file, width, height) => {
+  const resizeImageMaintainAspectRatio = async (file, maxWidth, maxHeight) => {
     const img = new Image();
     img.src = URL.createObjectURL(file);
 
     await img.decode();
 
+    // Calculate aspect ratio
+    const aspectRatio = img.width / img.height;
+    let newWidth, newHeight;
+
+    // Always scale to fit within max dimensions while maintaining aspect ratio
+    const targetRatio = maxWidth / maxHeight;
+
+    if (aspectRatio > targetRatio) {
+      // Image is wider - limit by width
+      newWidth = Math.min(img.width, maxWidth);
+      newHeight = Math.round(newWidth / aspectRatio);
+    } else {
+      // Image is taller - limit by height
+      newHeight = Math.min(img.height, maxHeight);
+      newWidth = Math.round(newHeight * aspectRatio);
+    }
+
+    // Ensure we don't exceed max dimensions
+    if (newWidth > maxWidth) {
+      newWidth = maxWidth;
+      newHeight = Math.round(newWidth / aspectRatio);
+    }
+    if (newHeight > maxHeight) {
+      newHeight = maxHeight;
+      newWidth = Math.round(newHeight * aspectRatio);
+    }
+
     const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
+    canvas.width = newWidth;
+    canvas.height = newHeight;
 
     return new Promise((resolve) => {
       pica
@@ -152,7 +184,7 @@ const Uploader = ({
     <div key={file.name}>
       <div>
         <img
-          className="inline-flex border-2 border-gray-100 w-24 max-h-24"
+          className="border-2 border-gray-100 max-w-full max-h-24 h-auto object-contain"
           src={file.preview}
           alt={file.name}
         />
@@ -209,9 +241,9 @@ const Uploader = ({
             />
           </DndProvider>
         ) : !product && imageUrl ? (
-          <div className="relative">
+          <div className="relative inline-block">
             <img
-              className="inline-flex border rounded-md border-gray-100 dark:border-gray-600 w-24 max-h-24 p-2"
+              className="border rounded-md border-gray-100 dark:border-gray-600 max-w-full max-h-24 h-auto object-contain p-2"
               src={imageUrl}
               alt="product"
             />

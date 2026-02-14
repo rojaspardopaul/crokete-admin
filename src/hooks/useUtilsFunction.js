@@ -6,6 +6,7 @@ import { useContext, useMemo } from "react";
 import { SidebarContext } from "@/context/SidebarContext";
 import LanguageServices from "@/services/LanguageServices";
 import SettingServices from "@/services/SettingServices";
+import { APP_CONFIG } from "@/config/appConfig";
 
 // import { languages } from "@/utils/data";
 
@@ -30,6 +31,17 @@ const useUtilsFunction = () => {
   } = useQuery({
     queryKey: ["languages"],
     queryFn: () => LanguageServices.getShowingLanguage(),
+    staleTime: 20 * 60 * 1000, //cache for 20 minutes,
+    gcTime: 25 * 60 * 1000,
+  });
+
+  const {
+    data: storeCustomizationSetting,
+    error: storeError,
+    isLoading: storeLoading,
+  } = useQuery({
+    queryKey: ["storeCustomization"],
+    queryFn: () => SettingServices.getStoreCustomizationSetting(),
     staleTime: 20 * 60 * 1000, //cache for 20 minutes,
     gcTime: 25 * 60 * 1000,
   });
@@ -78,11 +90,13 @@ const useUtilsFunction = () => {
   };
 
   const currency = globalSetting?.default_currency || "$";
+  const shopName = globalSetting?.shop_name || APP_CONFIG.SHOP_NAME;
 
   return {
     error,
     loading,
     currency,
+    shopName,
     getNumber,
     langError,
     langLoading,
@@ -93,6 +107,7 @@ const useUtilsFunction = () => {
     showingUrl,
     languages,
     globalSetting,
+    storeCustomizationSetting,
     showDateTimeFormat,
     showingTranslateValue,
   };

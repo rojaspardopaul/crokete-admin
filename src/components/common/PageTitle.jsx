@@ -1,21 +1,24 @@
 import React from "react";
 import { Helmet } from "react-helmet";
+import useUtilsFunction from "@/hooks/useUtilsFunction";
 
 const PageTitle = ({ title, description }) => {
+  const { shopName } = useUtilsFunction();
+  
   return (
     <Helmet>
       <title>
         {" "}
         {title
-          ? `${title} | React eCommerce Admin Dashboard`
-          : "Kachabazar | React eCommerce Admin Dashboard"}
+          ? `${title} | ${shopName} Admin Dashboard`
+          : `${shopName} | React eCommerce Admin Dashboard`}
       </title>
       <meta
         name="description"
         content={
           description
             ? ` ${description} `
-            : "Kachabazar : React Grocery & Organic Food Store e-commerce Admin Dashboard"
+            : `${shopName} : React Grocery & Organic Food Store e-commerce Admin Dashboard`
         }
       />
     </Helmet>

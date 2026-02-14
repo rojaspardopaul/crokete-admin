@@ -289,7 +289,7 @@ const Setting = () => {
 
                   <div className="mt-6 space-y-8">
                     <div className="grid md:grid-cols-5 items-center sm:grid-cols-12 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-                      <Label label="From Email" />
+                      <Label label={t("ShopName")} />
 
                       <div className="mt-2 sm:col-span-4">
                         <InputAreaTwo

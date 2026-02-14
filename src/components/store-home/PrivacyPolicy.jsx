@@ -101,6 +101,8 @@ const PrivacyPolicy = ({
                 <Uploader
                   imageUrl={privacyPolicyHeaderBg}
                   setImageUrl={setPrivacyPolicyHeaderBg}
+                  targetWidth={1920}
+                  targetHeight={400}
                 />
               </div>
             </div>
@@ -180,6 +182,8 @@ const PrivacyPolicy = ({
                 <Uploader
                   imageUrl={termsConditionsHeaderBg}
                   setImageUrl={setTermsConditionsHeaderBg}
+                  targetWidth={1920}
+                  targetHeight={400}
                 />
               </div>
             </div>

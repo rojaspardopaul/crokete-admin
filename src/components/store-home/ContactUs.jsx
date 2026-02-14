@@ -103,6 +103,8 @@ const ContactUs = ({
                 <Uploader
                   imageUrl={contactHeaderBg}
                   setImageUrl={setContactHeaderBg}
+                  targetWidth={1920}
+                  targetHeight={400}
                 />
               </div>
             </div>

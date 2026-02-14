@@ -43,7 +43,7 @@ const ForgotPassword = () => {
                 <InputArea
                   required={true}
                   register={register}
-                  label="Email"
+                  label="Correo"
                   name="verifyEmail"
                   type="email"
                   placeholder="john@doe.com"
