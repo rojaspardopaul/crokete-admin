@@ -154,6 +154,11 @@ const Uploader = ({
         formData.append("folder", folder);
         formData.append("public_id", public_id);
 
+        // Preserve format for SVG files
+        if (file.type === "image/svg+xml") {
+          formData.append("filename_override", `${public_id}.svg`);
+        }
+
         axios({
           url: import.meta.env.VITE_APP_CLOUDINARY_URL,
           method: "POST",
