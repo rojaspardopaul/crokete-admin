@@ -22,6 +22,8 @@ import CouponServices from "@/services/CouponServices";
 import CustomerServices from "@/services/CustomerServices";
 import LanguageServices from "@/services/LanguageServices";
 import ProductServices from "@/services/ProductServices";
+import PetServices from "@/services/PetServices";
+import BrandServices from "@/services/BrandServices";
 import useToggleDrawer from "@/hooks/useToggleDrawer";
 import AttributeServices from "@/services/AttributeServices";
 import CurrencyServices from "@/services/CurrencyServices";
@@ -204,6 +206,30 @@ const DeleteModal = ({
           handleSuccess(res);
           // Invalidate query to trigger refetch
           queryClient.invalidateQueries(["currencies"]);
+        }
+      }
+
+      if (location.pathname === "/pets") {
+        if (ids) {
+          const res = await PetServices.deleteManyPets({ ids: ids });
+          handleSuccess(res);
+          queryClient.invalidateQueries(["pets"]);
+        } else {
+          const res = await PetServices.deletePet(id);
+          handleSuccess(res);
+          queryClient.invalidateQueries(["pets"]);
+        }
+      }
+
+      if (location.pathname === "/brands") {
+        if (ids) {
+          const res = await BrandServices.deleteManyBrands({ ids: ids });
+          handleSuccess(res);
+          queryClient.invalidateQueries(["brands"]);
+        } else {
+          const res = await BrandServices.deleteBrand(id);
+          handleSuccess(res);
+          queryClient.invalidateQueries(["brands"]);
         }
       }
     } catch (err) {

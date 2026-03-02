@@ -44,6 +44,25 @@ const CustomerTable = ({ customers }) => {
             </TableCell>
 
             <TableCell>
+              <span className="text-sm font-semibold text-blue-600">
+                {user.loyalty?.points ?? 0}
+              </span>
+            </TableCell>
+            <TableCell>
+              <span
+                className={`text-xs font-semibold px-2 py-0.5 rounded-full uppercase ${
+                  user.loyalty?.tier === "vip"
+                    ? "bg-amber-100 text-amber-700"
+                    : user.loyalty?.tier === "frecuente"
+                    ? "bg-blue-100 text-blue-700"
+                    : "bg-gray-100 text-gray-600"
+                }`}
+              >
+                {user.loyalty?.tier || "nuevo"}
+              </span>
+            </TableCell>
+
+            <TableCell>
               <div className="flex justify-end text-right">
                 <div className="p-2 cursor-pointer text-gray-400 hover:text-emerald-600">
                   {" "}

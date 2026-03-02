@@ -51,6 +51,8 @@ const useProductSubmit = (id) => {
   const [isBulkUpdate, setIsBulkUpdate] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [defaultCategory, setDefaultCategory] = useState([]);
+  const [selectedPet, setSelectedPet] = useState(null);
+  const [selectedBrand, setSelectedBrand] = useState(null);
   const [resData, setResData] = useState({});
   const [language, setLanguage] = useState("es");
   const [openModal, setOpenModal] = useState(false);
@@ -135,6 +137,9 @@ const useProductSubmit = (id) => {
 
         categories: selectedCategory.map((item) => item._id),
         category: defaultCategory[0]._id,
+
+        pet: selectedPet || undefined,
+        brand: selectedBrand || undefined,
 
         image: imageUrl,
         stock: variants?.length < 1 ? data.stock : Number(totalStock),
@@ -265,6 +270,8 @@ const useProductSubmit = (id) => {
       setTotalStock(0);
       setSelectedCategory([]);
       setDefaultCategory([]);
+      setSelectedPet(null);
+      setSelectedBrand(null);
       if (location.pathname === "/products") {
         resetRefTwo?.current?.resetSelectedValues();
       }
@@ -341,6 +348,8 @@ const useProductSubmit = (id) => {
 
             setSelectedCategory(res.categories);
             setDefaultCategory([res?.category]);
+            setSelectedPet(res?.pet?._id || res?.pet || null);
+            setSelectedBrand(res?.brand?._id || res?.brand || null);
             setTag(JSON.parse(res.tag));
             setImageUrl(res.image);
             setVariants(res.variants);
@@ -363,9 +372,10 @@ const useProductSubmit = (id) => {
     const result = attribue
       ?.filter((att) => att.option !== "Checkbox")
       .map((v) => {
+        const title = showingTranslateValue(v?.title) || showingTranslateValue(v?.name) || v?._id || "Sin nombre";
         return {
-          label: showingTranslateValue(v?.title, lang),
-          value: showingTranslateValue(v?.title, lang),
+          label: title,
+          value: v?._id,
         };
       });
 
@@ -384,16 +394,15 @@ const useProductSubmit = (id) => {
   //for adding attribute values
   const handleAddAtt = (v, el) => {
     const result = attribue.filter((att) => {
-      const attribueTItle = showingTranslateValue(att?.title, lang);
-      return v.some((item) => item.label === attribueTItle);
+      return v.some((item) => item.value === att._id);
     });
 
     const attributeArray = result.map((value) => {
-      const attributeTitle = showingTranslateValue(value?.title, lang);
+      const title = showingTranslateValue(value?.title) || showingTranslateValue(value?.name) || value?._id || "Sin nombre";
       return {
         ...value,
-        label: attributeTitle,
-        value: attributeTitle,
+        label: title,
+        value: value._id,
       };
     });
 
@@ -689,6 +698,10 @@ const useProductSubmit = (id) => {
     handleSelectImage,
     handleSelectInlineImage,
     handleGenerateCombination,
+    selectedPet,
+    setSelectedPet,
+    selectedBrand,
+    setSelectedBrand,
   };
 };
 

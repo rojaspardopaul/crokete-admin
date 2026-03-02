@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 //internal import
 import Error from "@/components/form/others/Error";
@@ -21,6 +22,8 @@ const ResetPassword = () => {
   const { token } = useParams();
   const password = useRef("");
   const [loading, setLoading] = useState(false);
+  const [showNewPw, setShowNewPw] = useState(false);
+  const [showConfirmPw, setShowConfirmPw] = useState(false);
   const {
     register,
     handleSubmit,
@@ -71,35 +74,57 @@ const ResetPassword = () => {
 
               <form onSubmit={handleSubmit(submitHandler)}>
                 <LabelArea label="Contraseña" />
-                <Input
-                  label="Contraseña"
-                  name="newPassword"
-                  type="password"
-                  autoComplete="current-password"
-                  placeholder="Contraseña"
-                  {...register("newPassword", {
-                    required: "Debe especificar una contraseña",
-                    minLength: {
-                      value: 10,
-                      message: "La contraseña debe tener al menos 10 caracteres",
-                    },
-                  })}
-                />
+                <div className="relative">
+                  <Input
+                    label="Contraseña"
+                    name="newPassword"
+                    type={showNewPw ? "text" : "password"}
+                    autoComplete="current-password"
+                    placeholder="Contraseña"
+                    className="pr-10"
+                    {...register("newPassword", {
+                      required: "Debe especificar una contraseña",
+                      minLength: {
+                        value: 10,
+                        message: "La contraseña debe tener al menos 10 caracteres",
+                      },
+                    })}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPw((v) => !v)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                    tabIndex={-1}
+                  >
+                    {showNewPw ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                  </button>
+                </div>
                 <Error errorName={errors.newPassword} />
                 <div className="mt-6"></div>
                 <LabelArea label="Confirmar Contraseña" />
-                <Input
-                  label="Confirmar Contraseña"
-                  name="confirm_password"
-                  type="password"
-                  autoComplete="current-password"
-                  placeholder={t("ConfirmPassword")}
-                  {...register("confirm_password", {
-                    validate: (value) =>
-                      value === password.current ||
-                      "Las contraseñas no coinciden",
-                  })}
-                />
+                <div className="relative">
+                  <Input
+                    label="Confirmar Contraseña"
+                    name="confirm_password"
+                    type={showConfirmPw ? "text" : "password"}
+                    autoComplete="current-password"
+                    placeholder={t("ConfirmPassword")}
+                    className="pr-10"
+                    {...register("confirm_password", {
+                      validate: (value) =>
+                        value === password.current ||
+                        "Las contraseñas no coinciden",
+                    })}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPw((v) => !v)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                    tabIndex={-1}
+                  >
+                    {showConfirmPw ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                  </button>
+                </div>
                 <Error errorName={errors.confirm_password} />
 
                 <Button

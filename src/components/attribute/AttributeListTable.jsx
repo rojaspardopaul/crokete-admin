@@ -70,14 +70,11 @@ const AttributeListTable = ({
                           (val) => val?.name !== "All"
                         );
 
-                        const attributeName = attributeData?.find(
+                        const foundVariant = attributeData?.find(
                           (v) => v._id === variant[att?._id]
-                        )?.name;
-                        if (attributeName === undefined) {
-                          return attributeName?.es;
-                        } else {
-                          return showingTranslateValue(attributeName);
-                        }
+                        );
+                        if (!foundVariant) return null;
+                        return showingTranslateValue(foundVariant?.name) || foundVariant?._id;
                       })
                       ?.filter(Boolean)
                       .join(" ")}

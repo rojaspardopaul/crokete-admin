@@ -24,6 +24,9 @@ const Setting = lazy(() => import("@/pages/Setting"));
 const StoreHome = lazy(() => import("@/pages/StoreHome"));
 const StoreSetting = lazy(() => import("@/pages/StoreSetting"));
 const Notifications = lazy(() => import("@/pages/Notifications"));
+const Pets = lazy(() => import("@/pages/Pets"));
+const Brands = lazy(() => import("@/pages/Brands"));
+const LoyaltySettings = lazy(() => import("@/pages/LoyaltySettings"));
 /*
 //  * ⚠ These are internal routes!
 //  * They will be rendered inside the app, using the default `containers/Layout`.
@@ -97,6 +100,18 @@ const routes = [
     path: "/coupons",
     component: Coupons,
   },
+  {
+    path: "/pets",
+    component: Pets,
+  },
+  {
+    path: "/brands",
+    component: Brands,
+  },
+  {
+    path: "/loyalty",
+    component: LoyaltySettings,
+  },
   { path: "/settings", component: Setting },
   {
     path: "/store/customization",
@@ -134,6 +149,9 @@ const routeAccessList = [
   { label: "Categories", value: "categories" },
   { label: "Attributes", value: "attributes" },
   { label: "Coupons", value: "coupons" },
+  { label: "Mascotas", value: "pets" },
+  { label: "Marcas", value: "brands" },
+  { label: "Loyalty", value: "loyalty" },
   { label: "Customers", value: "customers" },
   { label: "Orders", value: "orders" },
   { label: "Staff", value: "our-staff" },

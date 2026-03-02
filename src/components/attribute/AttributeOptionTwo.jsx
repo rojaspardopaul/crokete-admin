@@ -27,11 +27,11 @@ const AttributeOptionTwo = ({
     const options = attributes?.variants?.map((val) => {
       return {
         ...val,
-        label: showingTranslateValue(val?.name),
+        label: showingTranslateValue(val?.name) || val?._id || "Sin nombre",
         value: val?._id,
       };
     });
-    setAttributeOptions(options);
+    setAttributeOptions(options || []);
   }, [attributes?.variants]);
 
   useEffect(() => {
@@ -46,7 +46,18 @@ const AttributeOptionTwo = ({
         options={attributeOptions}
         value={selected}
         onChange={(v) => handleSelectValue(v)}
-        labelledBy="Select"
+        labelledBy="Seleccionar"
+        overrideStrings={{
+          allItemsAreSelected: "Todos seleccionados",
+          clearSearch: "Limpiar b\u00fasqueda",
+          clearSelected: "Limpiar selecci\u00f3n",
+          noOptions: "Sin opciones disponibles",
+          search: "Buscar...",
+          selectAll: "Seleccionar todo",
+          selectAllFiltered: "Seleccionar todo (filtrado)",
+          selectSomeItems: "Seleccionar valores...",
+          create: "Crear",
+        }}
       />
     </div>
   );

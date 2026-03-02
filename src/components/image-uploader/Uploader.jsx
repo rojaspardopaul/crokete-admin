@@ -17,8 +17,8 @@ const Uploader = ({
   imageUrl,
   product,
   folder = "crokete",
-  targetWidth = 800, // Set default fixed width
-  targetHeight = 800, // Set default fixed height
+  targetWidth = 1200, // Set default fixed width (1200 for sharp zoom)
+  targetHeight = 1200, // Set default fixed height (1200 for sharp zoom)
 }) => {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -98,9 +98,11 @@ const Uploader = ({
           unsharpRadius: 0.6,
           unsharpThreshold: 2,
         })
-        .then((result) => pica.toBlob(result, file.type, 0.9))
+        .then((result) => pica.toBlob(result, "image/webp", 1.0))
         .then((blob) => {
-          const resizedFile = new File([blob], file.name, { type: file.type });
+          // Replace original extension with .webp
+          const webpName = file.name.replace(/\.[^.]+$/, ".webp");
+          const resizedFile = new File([blob], webpName, { type: "image/webp" });
           resolve(resizedFile);
         });
     });

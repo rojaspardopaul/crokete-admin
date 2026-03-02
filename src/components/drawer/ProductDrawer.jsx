@@ -40,6 +40,9 @@ import UploaderThree from "@/components/image-uploader/UploaderThree";
 import AttributeOptionTwo from "@/components/attribute/AttributeOptionTwo";
 import AttributeListTable from "@/components/attribute/AttributeListTable";
 import SwitchToggleForCombination from "@/components/form/switch/SwitchToggleForCombination";
+import useAsync from "@/hooks/useAsync";
+import PetServices from "@/services/PetServices";
+import BrandServices from "@/services/BrandServices";
 
 //internal import
 
@@ -91,9 +94,16 @@ const ProductDrawer = ({ id }) => {
     handleSelectImage,
     handleSelectInlineImage,
     handleGenerateCombination,
+    selectedPet,
+    setSelectedPet,
+    selectedBrand,
+    setSelectedBrand,
   } = useProductSubmit(id);
 
   const { currency, showingTranslateValue } = useUtilsFunction();
+
+  const { data: petsData } = useAsync(PetServices.getShowingPets);
+  const { data: brandsData } = useAsync(BrandServices.getShowingBrands);
 
   return (
     <>
@@ -276,6 +286,42 @@ const ProductDrawer = ({ id }) => {
               </div>
 
               <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+                <LabelArea label="Mascota" />
+                <div className="col-span-8 sm:col-span-4">
+                  <select
+                    value={selectedPet || ""}
+                    onChange={(e) => setSelectedPet(e.target.value || null)}
+                    className="border h-12 text-sm focus:outline-none block w-full bg-gray-100 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-500 border-transparent focus:bg-white focus:border-gray-300 rounded-md"
+                  >
+                    <option value="">Seleccionar mascota (opcional)</option>
+                    {petsData?.map((pet) => (
+                      <option key={pet._id} value={pet._id}>
+                        {showingTranslateValue(pet?.name)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+                <LabelArea label="Marca" />
+                <div className="col-span-8 sm:col-span-4">
+                  <select
+                    value={selectedBrand || ""}
+                    onChange={(e) => setSelectedBrand(e.target.value || null)}
+                    className="border h-12 text-sm focus:outline-none block w-full bg-gray-100 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-500 border-transparent focus:bg-white focus:border-gray-300 rounded-md"
+                  >
+                    <option value="">Seleccionar marca (opcional)</option>
+                    {brandsData?.map((brand) => (
+                      <option key={brand._id} value={brand._id}>
+                        {showingTranslateValue(brand?.name)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
                 <LabelArea label="Product Price" />
                 <div className="col-span-8 sm:col-span-4">
                   <InputValue
@@ -395,21 +441,35 @@ const ProductDrawer = ({ id }) => {
               </div>
             ) : (
               <div className="p-6">
-                {/* <h4 className="mb-4 font-semibold text-lg">Variants</h4> */}
+                <h4 className="mb-2 font-semibold text-sm text-gray-700">1. Selecciona los atributos para las variantes</h4>
+                <p className="mb-4 text-xs text-gray-500">Elige los tipos de variante (ej: Peso, Tama\u00f1o) y luego selecciona sus valores.</p>
                 <div className="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-3 md:gap-3 xl:gap-3 lg:gap-2 mb-3">
-                  <MultiSelect
-                    options={attTitle}
-                    value={attributes}
-                    onChange={(v) => handleAddAtt(v)}
-                    labelledBy="Select"
-                  />
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">Tipo de atributo</label>
+                    <MultiSelect
+                      options={attTitle}
+                      value={attributes}
+                      onChange={(v) => handleAddAtt(v)}
+                      labelledBy="Seleccionar"
+                      overrideStrings={{
+                        allItemsAreSelected: "Todos seleccionados",
+                        clearSearch: "Limpiar b\u00fasqueda",
+                        clearSelected: "Limpiar selecci\u00f3n",
+                        noOptions: "Sin opciones disponibles",
+                        search: "Buscar...",
+                        selectAll: "Seleccionar todo",
+                        selectAllFiltered: "Seleccionar todo (filtrado)",
+                        selectSomeItems: "Seleccionar atributo...",
+                        create: "Crear",
+                      }}
+                    />
+                  </div>
 
                   {attributes?.map((attribute, i) => (
                     <div key={attribute._id}>
-                      <div className="flex w-full h-10 justify-between font-sans rounded-tl rounded-tr bg-gray-200 px-4 py-3 text-left text-sm font-normal text-gray-700 hover:bg-gray-200">
-                        {"Select"}
-                        {showingTranslateValue(attribute?.title)}
-                      </div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">
+                        Valores de: {showingTranslateValue(attribute?.title) || showingTranslateValue(attribute?.name) || attribute?.label || "Atributo"}
+                      </label>
 
                       <AttributeOptionTwo
                         id={i + 1}
@@ -429,13 +489,13 @@ const ProductDrawer = ({ id }) => {
                       type="button"
                       className="mx-2"
                     >
-                      <span className="text-xs">{t("GenerateVariants")}</span>
+                      <span className="text-xs">Generar Variantes</span>
                     </Button>
                   )}
 
                   {variantTitle.length > 0 && (
                     <Button onClick={handleClearVariant} className="mx-2">
-                      <span className="text-xs">{t("ClearVariants")}</span>
+                      <span className="text-xs">Limpiar Variantes</span>
                     </Button>
                   )}
                 </div>
@@ -469,15 +529,15 @@ const ProductDrawer = ({ id }) => {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>{t("Image")}</TableHead>
-                        <TableHead>{t("Combination")}</TableHead>
-                        <TableHead>{t("Sku")}</TableHead>
-                        <TableHead>{t("Barcode")}</TableHead>
-                        <TableHead>{t("Price")}</TableHead>
-                        <TableHead>{t("SalePrice")}</TableHead>
-                        <TableHead>{t("QuantityTbl")}</TableHead>
+                        <TableHead>Imagen</TableHead>
+                        <TableHead>Combinaci\u00f3n</TableHead>
+                        <TableHead>SKU</TableHead>
+                        <TableHead>C\u00f3digo de barras</TableHead>
+                        <TableHead>Precio</TableHead>
+                        <TableHead>Precio de venta</TableHead>
+                        <TableHead>Cantidad</TableHead>
                         <TableHead className="text-right">
-                          {t("Action")}
+                          Acci\u00f3n
                         </TableHead>
                       </TableRow>
                     </TableHeader>

@@ -180,6 +180,8 @@ const Customers = () => {
                         <TableHead>{t("CustomersName")}</TableHead>
                         <TableHead>{t("CustomersEmail")}</TableHead>
                         <TableHead>{t("CustomersPhone")}</TableHead>
+                        <TableHead>Puntos</TableHead>
+                        <TableHead>Nivel</TableHead>
                         <TableHead className="text-right">
                           {t("CustomersActions")}
                         </TableHead>

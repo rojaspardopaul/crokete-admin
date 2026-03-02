@@ -11,9 +11,11 @@ import CouponServices from "@/services/CouponServices";
 import CurrencyServices from "@/services/CurrencyServices";
 import LanguageServices from "@/services/LanguageServices";
 import ProductServices from "@/services/ProductServices";
+import PetServices from "@/services/PetServices";
+import BrandServices from "@/services/BrandServices";
 import { notifyError, notifySuccess } from "@/utils/toast";
 
-const ShowHideButton = ({ id, status, category, currencyStatusName }) => {
+const ShowHideButton = ({ id, status, category, pet, brand, currencyStatusName }) => {
   const location = useLocation();
   const { setIsUpdate } = useContext(SidebarContext);
 
@@ -96,6 +98,24 @@ const ShowHideButton = ({ id, status, category, currencyStatusName }) => {
         notifySuccess(res.message);
         // Invalidate query to trigger refetch
         queryClient.invalidateQueries(["attribute"]);
+      }
+
+      if (location.pathname === "/pets" || pet) {
+        const res = await PetServices.updateStatus(id, {
+          status: newStatus,
+        });
+        setIsUpdate(true);
+        notifySuccess(res.message);
+        queryClient.invalidateQueries(["pets"]);
+      }
+
+      if (location.pathname === "/brands" || brand) {
+        const res = await BrandServices.updateStatus(id, {
+          status: newStatus,
+        });
+        setIsUpdate(true);
+        notifySuccess(res.message);
+        queryClient.invalidateQueries(["brands"]);
       }
 
       if (location.pathname === "/coupons") {
