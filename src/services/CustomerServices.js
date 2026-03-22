@@ -28,6 +28,10 @@ const CustomerServices = {
   deleteCustomer: async (id) => {
     return requests.delete(`/customer/${id}`);
   },
+
+  updateShippingAddress: async (id, body) => {
+    return requests.post(`/customer/shipping/address/${id}`, body);
+  },
 };
 
 export default CustomerServices;

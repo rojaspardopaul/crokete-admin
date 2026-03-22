@@ -37,6 +37,26 @@ const useStoreSettingSubmit = (id) => {
     if (handleDisableForDemo()) {
       return; // Exit the function if the feature is disabled
     }
+
+    // Validate Stripe keys match the same account and mode
+    if (data.stripe_key && data.stripe_secret) {
+      const pkMatch = data.stripe_key.match(/^pk_(test|live)_(\w{7})/);
+      const skMatch = data.stripe_secret.match(/^sk_(test|live)_(\w{7})/);
+
+      if (!pkMatch) {
+        return notifyError("Stripe Public Key debe empezar con pk_test_ o pk_live_");
+      }
+      if (!skMatch) {
+        return notifyError("Stripe Secret Key debe empezar con sk_test_ o sk_live_");
+      }
+      if (pkMatch[1] !== skMatch[1]) {
+        return notifyError(`Las keys de Stripe mezclan modos: Public Key es ${pkMatch[1]} pero Secret Key es ${skMatch[1]}`);
+      }
+      if (pkMatch[2] !== skMatch[2]) {
+        return notifyError(`Las keys de Stripe pertenecen a cuentas diferentes (${pkMatch[2]} vs ${skMatch[2]}). Verifica en tu Dashboard de Stripe.`);
+      }
+    }
+
     try {
       setIsSubmitting(true);
       const settingData = {

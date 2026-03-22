@@ -1,16 +1,23 @@
 import { Badge } from "@/components/ui/badge";
 
+const STATUS_LABELS = {
+  pedido: "Pedido",
+  empaquetado: "Empaquetado",
+  en_reparto: "En Reparto",
+  entregado: "Entregado",
+  cancelado: "Cancelado",
+};
+
 const Status = ({ status }) => {
-  // console.log("status", status);
+  const norm = status?.toLowerCase() || "";
+  const label = STATUS_LABELS[norm] || status;
 
   return (
     <>
       <span className="font-serif">
-        {(status === "pendiente" ||
-          status === "Pendiente" ||
-          status === "inactivo") && (
+        {(norm === "pedido" || norm === "inactivo") && (
           <Badge variant="parked" className="capitalize">
-            {status}
+            {label}
           </Badge>
         )}
         {status === "Waiting for Password Reset" && (
@@ -18,21 +25,24 @@ const Status = ({ status }) => {
             {status}
           </Badge>
         )}
-        {(status === "procesando" || status === "Procesando") && (
+        {norm === "empaquetado" && (
           <Badge variant="unpublished" className="capitalize">
-            {status}
+            {label}
           </Badge>
         )}
-        {(status === "entregado" ||
-          status === "Entregado" ||
-          status === "activo") && (
+        {norm === "en_reparto" && (
+          <Badge variant="unpublished" className="capitalize">
+            {label}
+          </Badge>
+        )}
+        {(norm === "entregado" || norm === "activo") && (
           <Badge variant="success" className="capitalize">
-            {status}
+            {label}
           </Badge>
         )}
-        {(status === "cancelado" || status === "Cancelado") && (
+        {norm === "cancelado" && (
           <Badge variant="error" className="capitalize">
-            {status}
+            {label}
           </Badge>
         )}
       </span>

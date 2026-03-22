@@ -208,16 +208,19 @@ const Orders = () => {
                       <SelectValue placeholder={t("Status")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Entregado">
+                      <SelectItem value="pedido">
+                        Pedido
+                      </SelectItem>
+                      <SelectItem value="empaquetado">
+                        Empaquetado
+                      </SelectItem>
+                      <SelectItem value="en_reparto">
+                        En Reparto
+                      </SelectItem>
+                      <SelectItem value="entregado">
                         {t("PageOrderDelivered")}
                       </SelectItem>
-                      <SelectItem value="Pendiente">
-                        {t("PageOrderPending")}
-                      </SelectItem>
-                      <SelectItem value="Procesando">
-                        {t("PageOrderProcessing")}
-                      </SelectItem>
-                      <SelectItem value="Cancelado">
+                      <SelectItem value="cancelado">
                         {t("OrderCancel")}
                       </SelectItem>
                     </SelectContent>

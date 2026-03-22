@@ -27,6 +27,9 @@ const Notifications = lazy(() => import("@/pages/Notifications"));
 const Pets = lazy(() => import("@/pages/Pets"));
 const Brands = lazy(() => import("@/pages/Brands"));
 const LoyaltySettings = lazy(() => import("@/pages/LoyaltySettings"));
+const VetSettings = lazy(() => import("@/pages/VetSettings"));
+const VetAppointments = lazy(() => import("@/pages/VetAppointments"));
+const PaymentLogs = lazy(() => import("@/pages/PaymentLogs"));
 /*
 //  * ⚠ These are internal routes!
 //  * They will be rendered inside the app, using the default `containers/Layout`.
@@ -112,6 +115,18 @@ const routes = [
     path: "/loyalty",
     component: LoyaltySettings,
   },
+  {
+    path: "/vet-settings",
+    component: VetSettings,
+  },
+  {
+    path: "/vet-appointments",
+    component: VetAppointments,
+  },
+  {
+    path: "/payment-logs",
+    component: PaymentLogs,
+  },
   { path: "/settings", component: Setting },
   {
     path: "/store/customization",
@@ -152,6 +167,9 @@ const routeAccessList = [
   { label: "Mascotas", value: "pets" },
   { label: "Marcas", value: "brands" },
   { label: "Loyalty", value: "loyalty" },
+  { label: "Configuración Vet", value: "vet-settings" },
+  { label: "Consultas Vet", value: "vet-appointments" },
+  { label: "Logs de Pagos", value: "payment-logs" },
   { label: "Customers", value: "customers" },
   { label: "Orders", value: "orders" },
   { label: "Staff", value: "our-staff" },

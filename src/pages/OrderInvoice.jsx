@@ -35,6 +35,11 @@ import useUtilsFunction from "@/hooks/useUtilsFunction";
 import useDisableForDemo from "@/hooks/useDisableForDemo";
 import InvoiceForDownload from "@/components/invoice/InvoiceForDownload";
 
+const PAYMENT_LABELS = {
+  Cash: "Pago Contra Entrega",
+  Card: "Tarjeta de Crédito",
+};
+
 const OrderInvoice = () => {
   const { t } = useTranslation();
   const { theme } = useTheme();
@@ -161,10 +166,11 @@ const OrderInvoice = () => {
                   {data?.user_info?.email}{" "}
                   <span className="ml-2">{data?.user_info?.contact}</span>
                   <br />
-                  {data?.user_info?.address?.substring(0, 30)}
+                  {data?.user_info?.calle} {data?.user_info?.numExterior}
+                  {data?.user_info?.numInterior ? ` Int. ${data.user_info.numInterior}` : ""}
                   <br />
-                  {data?.user_info?.city}, {data?.user_info?.country},{" "}
-                  {data?.user_info?.zipCode}
+                  {data?.user_info?.colonia}, {data?.user_info?.municipio},{" "}
+                  Jalisco C.P. {data?.user_info?.postalCode}
                 </span>
               </div>
             </div>
@@ -209,7 +215,7 @@ const OrderInvoice = () => {
                   {t("InvoicepaymentMethod")}
                 </span>
                 <span className="text-sm text-gray-500 dark:text-gray-400 font-semibold font-serif block">
-                  {data.paymentMethod}
+                  {PAYMENT_LABELS[data.paymentMethod] || data.paymentMethod}
                 </span>
               </div>
               <div className="mb-3 md:mb-0 lg:mb-0  flex flex-col sm:flex-wrap">
@@ -234,7 +240,7 @@ const OrderInvoice = () => {
                 <span className="mb-1 font-bold font-serif text-sm uppercase text-gray-600 dark:text-gray-500 block">
                   {t("InvoiceTotalAmount")}
                 </span>
-                <span className="text-xl font-serif font-bold text-red-500 dark:text-emerald-500 block">
+                <span className="text-xl font-serif font-bold text-emerald-500 block">
                   {currency}
                   {getNumberTwo(data.total)}
                 </span>
@@ -249,14 +255,14 @@ const OrderInvoice = () => {
             document={
               <InvoiceForDownload data={data} globalSetting={globalSetting} />
             }
-            fileName="Invoice"
+            fileName={`Pedido-${data?.invoice}.pdf`}
           >
             {({ blob, url, loading, error }) =>
               loading ? (
                 "Loading..."
               ) : (
                 <Button variant="download">
-                  Download Invoice
+                  {t("DownloadInvoice")}
                   <span className="ml-2 text-base">
                     <IoCloudDownloadOutline />
                   </span>
@@ -286,7 +292,7 @@ const OrderInvoice = () => {
                     onClick={() => handleEmailInvoice(data)}
                     variant="create"
                   >
-                    Email Invoice
+                    Enviar Pedido
                     <span className="ml-2">
                       <FiMail />
                     </span>

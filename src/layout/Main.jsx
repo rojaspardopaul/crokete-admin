@@ -3,9 +3,10 @@ import useGetCData from "@/hooks/useGetCData";
 import NotFoundPage from "@/components/common/NotFoundPage";
 
 const Main = ({ children }) => {
-  const { path, accessList } = useGetCData();
+  const { path, accessList, role } = useGetCData();
 
-  if (!accessList?.includes(path)) {
+  // Super admin has access to all routes
+  if (role !== 'super admin' && !accessList?.includes(path)) {
     return <NotFoundPage />;
   }
   return (

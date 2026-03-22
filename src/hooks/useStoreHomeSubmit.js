@@ -40,7 +40,6 @@ const useStoreHomeSubmit = () => {
   const [promotionBanner, setPromotionBanner] = useState(true);
   const [featuredCategories, setFeaturedCategories] = useState(true);
   const [popularProducts, setPopularProducts] = useState(true);
-  const [quickDelivery, setQuickDelivery] = useState(true);
   const [latestDiscounted, setLatestDiscounted] = useState(true);
   const [dailyNeeds, setDailyNeeds] = useState(true);
   const [featurePromo, setFeaturePromo] = useState(true);
@@ -104,7 +103,6 @@ const useStoreHomeSubmit = () => {
   const [sliderImageFour, setSliderImageFour] = useState("");
   const [sliderImageFive, setSliderImageFive] = useState("");
   const [placeholderImage, setPlaceHolderImage] = useState("");
-  const [quickSectionImage, setQuickSectionImage] = useState("");
   const [ourFounderOneImage, setOurFounderOneImage] = useState("");
   const [ourFounderTwoImage, setOurFounderTwoImage] = useState("");
   const [ourFounderThreeImage, setOurFounderThreeImage] = useState("");
@@ -228,15 +226,11 @@ const useStoreHomeSubmit = () => {
 
             slider_width_status: isSliderFullWidth,
             promotion_banner_status: allowPromotionBanner,
-            delivery_status: quickDelivery,
             popular_products_status: popularProducts,
             discount_product_status: latestDiscounted,
             discount_coupon_code: couponList?.map((coupon) => coupon?.value),
             place_holder_img: placeholderImage,
             feature_promo_status: featurePromo,
-
-            quick_delivery_link: data.quick_delivery_link,
-            quick_delivery_img: quickSectionImage,
 
             discount_title: handleRemoveEmptyKey({
               ...resData?.home?.discount_title,
@@ -276,23 +270,6 @@ const useStoreHomeSubmit = () => {
               [language]: data.popular_description || "",
             }),
             popular_product_limit: data.popular_product_limit,
-
-            quick_delivery_subtitle: handleRemoveEmptyKey({
-              ...resData?.home?.quick_delivery_subtitle,
-              [language]: data.quick_delivery_subtitle || "",
-            }),
-            quick_delivery_title: handleRemoveEmptyKey({
-              ...resData?.home?.quick_delivery_title,
-              [language]: data.quick_delivery_title || "",
-            }),
-            quick_delivery_description: handleRemoveEmptyKey({
-              ...resData?.home?.quick_delivery_description,
-              [language]: data.quick_delivery_description || "",
-            }),
-            quick_delivery_button: handleRemoveEmptyKey({
-              ...resData?.home?.quick_delivery_button,
-              [language]: data.quick_delivery_button || "",
-            }),
 
             latest_discount_title: handleRemoveEmptyKey({
               ...resData?.home?.latest_discount_title,
@@ -1164,7 +1141,6 @@ const useStoreHomeSubmit = () => {
           //home
 
           setPlaceHolderImage(res?.home?.place_holder_img);
-          setQuickSectionImage(res?.home?.quick_delivery_img);
           setGetYourDailyNeedImageLeft(res?.home?.daily_need_img_left);
           setGetYourDailyNeedImageRight(res?.home?.daily_need_img_right);
           setGetButton1image(res?.home?.button1_img);
@@ -1174,7 +1150,6 @@ const useStoreHomeSubmit = () => {
           setAllowPromotionBanner(res?.home?.promotion_banner_status);
           setPopularProducts(res?.home?.popular_products_status);
           setFeaturedCategories(res?.home?.featured_status);
-          setQuickDelivery(res?.home?.delivery_status);
           setLatestDiscounted(res?.home?.discount_product_status);
           setDailyNeeds(res?.home?.daily_needs_status);
           setFeaturePromo(res?.home?.feature_promo_status);
@@ -1219,23 +1194,6 @@ const useStoreHomeSubmit = () => {
             res?.home?.popular_description[language || "es"]
           );
           setValue("popular_product_limit", res?.home?.popular_product_limit);
-          setValue(
-            "quick_delivery_subtitle",
-            res?.home?.quick_delivery_subtitle[language || "es"]
-          );
-          setValue(
-            "quick_delivery_title",
-            res?.home?.quick_delivery_title[language || "es"]
-          );
-          setValue(
-            "quick_delivery_description",
-            res?.home?.quick_delivery_description[language || "es"]
-          );
-          setValue(
-            "quick_delivery_button",
-            res?.home?.quick_delivery_button[language || "es"]
-          );
-          setValue("quick_delivery_link", res?.home?.quick_delivery_link);
           setValue(
             "latest_discount_title",
             res?.home?.latest_discount_title[language || "es"]
@@ -1999,8 +1957,6 @@ const useStoreHomeSubmit = () => {
     setSliderImageFive,
     placeholderImage,
     setPlaceHolderImage,
-    quickSectionImage,
-    setQuickSectionImage,
     getYourDailyNeedImageLeft,
     setGetYourDailyNeedImageLeft,
     getYourDailyNeedImageRight,
@@ -2038,8 +1994,6 @@ const useStoreHomeSubmit = () => {
     setFeaturedCategories,
     popularProducts,
     setPopularProducts,
-    setQuickDelivery,
-    quickDelivery,
     setLatestDiscounted,
     latestDiscounted,
     setDailyNeeds,

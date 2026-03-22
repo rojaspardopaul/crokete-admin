@@ -136,17 +136,17 @@ const useFilter = (data) => {
     if (location.pathname === "/dashboard") {
       const orderPending = services?.filter(
         (statusP) =>
-          statusP.status === "Pendiente" || statusP.status === "pendiente"
+          statusP.status === "pedido"
       );
       setPending(orderPending);
       const orderProcessing = services?.filter(
         (statusO) =>
-          statusO.status === "Procesando" || statusO.status === "procesando"
+          statusO.status === "empaquetado"
       );
       setProcessing(orderProcessing);
       const orderDelivered = services?.filter(
         (statusD) =>
-          statusD.status === "Entregado" || statusD.status === "entregado"
+          statusD.status === "entregado"
       );
       setDelivered(orderDelivered);
       //daily total order calculation

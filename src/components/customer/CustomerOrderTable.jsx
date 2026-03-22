@@ -29,7 +29,9 @@ const CustomerOrderTable = ({ orders }) => {
             </TableCell>
 
             <TableCell>
-              <span className="text-sm">{order?.user_info?.address}</span>
+              <span className="text-sm">
+                {order?.user_info?.calle} {order?.user_info?.numExterior}, {order?.user_info?.colonia}
+              </span>
             </TableCell>
             <TableCell>
               {" "}

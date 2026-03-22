@@ -8,6 +8,8 @@ import {
   FiGlobe,
   FiTarget,
   FiGift,
+  FiActivity,
+  FiFileText,
 } from "react-icons/fi";
 
 /**
@@ -67,9 +69,30 @@ const sidebar = [
   },
 
   {
+    path: "/payment-logs",
+    icon: FiFileText,
+    name: "PaymentLogs",
+  },
+
+  {
     path: "/loyalty",
     icon: FiGift,
     name: "Loyalty",
+  },
+
+  {
+    icon: FiActivity,
+    name: "Veterinaria",
+    routes: [
+      {
+        path: "/vet-settings",
+        name: "Configuración Vet",
+      },
+      {
+        path: "/vet-appointments",
+        name: "Consultas",
+      },
+    ],
   },
 
   {

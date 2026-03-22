@@ -94,6 +94,7 @@ const useGetCData = () => {
     path,
     accessList,
   };
+
 };
 
 export default useGetCData;

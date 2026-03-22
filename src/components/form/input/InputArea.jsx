@@ -11,6 +11,8 @@ const InputArea = ({
   type,
   autoComplete,
   placeholder,
+  disabled,
+  readOnly,
 }) => {
   const isPassword = type === "password";
   const [showPassword, setShowPassword] = useState(false);
@@ -26,6 +28,8 @@ const InputArea = ({
         placeholder={placeholder}
         name={name}
         autoComplete={autoComplete}
+        disabled={disabled}
+        readOnly={readOnly}
         className={isPassword ? "pr-10" : ""}
       />
       {isPassword && (
