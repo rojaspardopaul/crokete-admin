@@ -43,6 +43,7 @@ const useStoreHomeSubmit = () => {
   const [latestDiscounted, setLatestDiscounted] = useState(true);
   const [dailyNeeds, setDailyNeeds] = useState(true);
   const [featurePromo, setFeaturePromo] = useState(true);
+  const [footerInfo, setFooterInfo] = useState(true);
   const [footerBlock1, setFooterBlock1] = useState(true);
   const [footerBlock2, setFooterBlock2] = useState(true);
   const [footerBlock3, setFooterBlock3] = useState(true);
@@ -992,6 +993,64 @@ const useStoreHomeSubmit = () => {
             block4_email: data.footer_block_four_email,
             bottom_contact: data.footer_Bottom_Contact,
           },
+          footer_info: {
+            status: footerInfo,
+            card1_title: handleRemoveEmptyKey({
+              ...resData?.footer_info?.card1_title,
+              [language]: data.info_card1_title || "",
+            }),
+            card1_subtitle: handleRemoveEmptyKey({
+              ...resData?.footer_info?.card1_subtitle,
+              [language]: data.info_card1_subtitle || "",
+            }),
+            card1_desc: handleRemoveEmptyKey({
+              ...resData?.footer_info?.card1_desc,
+              [language]: data.info_card1_desc || "",
+            }),
+            card1_icon: data.info_card1_icon || "truck",
+
+            card2_title: handleRemoveEmptyKey({
+              ...resData?.footer_info?.card2_title,
+              [language]: data.info_card2_title || "",
+            }),
+            card2_subtitle: handleRemoveEmptyKey({
+              ...resData?.footer_info?.card2_subtitle,
+              [language]: data.info_card2_subtitle || "",
+            }),
+            card2_desc: handleRemoveEmptyKey({
+              ...resData?.footer_info?.card2_desc,
+              [language]: data.info_card2_desc || "",
+            }),
+            card2_icon: data.info_card2_icon || "shield-check",
+
+            card3_title: handleRemoveEmptyKey({
+              ...resData?.footer_info?.card3_title,
+              [language]: data.info_card3_title || "",
+            }),
+            card3_subtitle: handleRemoveEmptyKey({
+              ...resData?.footer_info?.card3_subtitle,
+              [language]: data.info_card3_subtitle || "",
+            }),
+            card3_desc: handleRemoveEmptyKey({
+              ...resData?.footer_info?.card3_desc,
+              [language]: data.info_card3_desc || "",
+            }),
+            card3_icon: data.info_card3_icon || "heart",
+
+            card4_title: handleRemoveEmptyKey({
+              ...resData?.footer_info?.card4_title,
+              [language]: data.info_card4_title || "",
+            }),
+            card4_subtitle: handleRemoveEmptyKey({
+              ...resData?.footer_info?.card4_subtitle,
+              [language]: data.info_card4_subtitle || "",
+            }),
+            card4_desc: handleRemoveEmptyKey({
+              ...resData?.footer_info?.card4_desc,
+              [language]: data.info_card4_desc || "",
+            }),
+            card4_icon: data.info_card4_icon || "award",
+          },
           slug: {
             right_box_status: singleProductPageRightBox,
 
@@ -1564,6 +1623,25 @@ const useStoreHomeSubmit = () => {
           setValue("social_whatsapp", res?.footer?.social_whatsapp);
           setValue("footer_Bottom_Contact", res?.footer?.bottom_contact);
 
+          // footer_info (sección informativa)
+          setFooterInfo(res?.footer_info?.status !== false);
+          setValue("info_card1_title", res?.footer_info?.card1_title?.[language || "es"] || "");
+          setValue("info_card1_subtitle", res?.footer_info?.card1_subtitle?.[language || "es"] || "");
+          setValue("info_card1_desc", res?.footer_info?.card1_desc?.[language || "es"] || "");
+          setValue("info_card1_icon", res?.footer_info?.card1_icon || "truck");
+          setValue("info_card2_title", res?.footer_info?.card2_title?.[language || "es"] || "");
+          setValue("info_card2_subtitle", res?.footer_info?.card2_subtitle?.[language || "es"] || "");
+          setValue("info_card2_desc", res?.footer_info?.card2_desc?.[language || "es"] || "");
+          setValue("info_card2_icon", res?.footer_info?.card2_icon || "shield-check");
+          setValue("info_card3_title", res?.footer_info?.card3_title?.[language || "es"] || "");
+          setValue("info_card3_subtitle", res?.footer_info?.card3_subtitle?.[language || "es"] || "");
+          setValue("info_card3_desc", res?.footer_info?.card3_desc?.[language || "es"] || "");
+          setValue("info_card3_icon", res?.footer_info?.card3_icon || "heart");
+          setValue("info_card4_title", res?.footer_info?.card4_title?.[language || "es"] || "");
+          setValue("info_card4_subtitle", res?.footer_info?.card4_subtitle?.[language || "es"] || "");
+          setValue("info_card4_desc", res?.footer_info?.card4_desc?.[language || "es"] || "");
+          setValue("info_card4_icon", res?.footer_info?.card4_icon || "award");
+
           // slug
           setSingleProductPageRightBox(res?.slug?.right_box_status);
           setValue(
@@ -2000,6 +2078,8 @@ const useStoreHomeSubmit = () => {
     dailyNeeds,
     setFeaturePromo,
     featurePromo,
+    setFooterInfo,
+    footerInfo,
     setFooterBlock1,
     footerBlock1,
     setFooterBlock2,

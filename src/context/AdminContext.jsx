@@ -3,10 +3,27 @@ import React, { createContext, useReducer } from 'react';
 
 export const AdminContext = createContext();
 
+const getValidAdminInfo = () => {
+  const raw = Cookies.get('adminInfo');
+  if (!raw) return null;
+  try {
+    const info = JSON.parse(raw);
+    if (info?.token) {
+      const payload = JSON.parse(atob(info.token.split('.')[1]));
+      if (payload.exp * 1000 < Date.now()) {
+        Cookies.remove('adminInfo');
+        return null;
+      }
+    }
+    return info;
+  } catch {
+    Cookies.remove('adminInfo');
+    return null;
+  }
+};
+
 const initialState = {
-  adminInfo: Cookies.get('adminInfo')
-    ? JSON.parse(Cookies.get('adminInfo'))
-    : null,
+  adminInfo: getValidAdminInfo(),
 };
 
 function reducer(state, action) {

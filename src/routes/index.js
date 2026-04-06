@@ -26,6 +26,7 @@ const StoreSetting = lazy(() => import("@/pages/StoreSetting"));
 const Notifications = lazy(() => import("@/pages/Notifications"));
 const Pets = lazy(() => import("@/pages/Pets"));
 const Brands = lazy(() => import("@/pages/Brands"));
+const Reviews = lazy(() => import("@/pages/Reviews"));
 const LoyaltySettings = lazy(() => import("@/pages/LoyaltySettings"));
 const VetSettings = lazy(() => import("@/pages/VetSettings"));
 const VetAppointments = lazy(() => import("@/pages/VetAppointments"));
@@ -110,6 +111,10 @@ const routes = [
   {
     path: "/brands",
     component: Brands,
+  },
+  {
+    path: "/reviews",
+    component: Reviews,
   },
   {
     path: "/loyalty",

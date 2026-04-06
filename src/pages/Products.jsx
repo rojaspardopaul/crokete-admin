@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -19,7 +19,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useTranslation } from "react-i18next";
-import { FiPlus } from "react-icons/fi";
+import { FiPlus, FiZap } from "react-icons/fi";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 
 //internal import
@@ -42,6 +42,7 @@ import BulkActionDrawer from "@/components/drawer/BulkActionDrawer";
 import TableLoading from "@/components/preloader/TableLoading";
 import SelectCategory from "@/components/form/selectOption/SelectCategory";
 import AnimatedContent from "@/components/common/AnimatedContent";
+import AiProductModal from "@/components/product/AiProductModal";
 
 const Products = () => {
   const { title, handleDeleteMany, handleUpdateMany } = useToggleDrawer();
@@ -54,6 +55,9 @@ const Products = () => {
     handleSelectAll,
     toggleDrawer,
   } = useAction();
+
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
+  const [aiGeneratedData, setAiGeneratedData] = useState(null);
 
   const { t } = useTranslation();
   const {
@@ -148,6 +152,17 @@ const Products = () => {
             </Button>
 
             <Button
+              variant="outline"
+              onClick={() => setIsAiModalOpen(true)}
+              className="w-full sm:w-auto border-emerald-500 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950"
+            >
+              <span>
+                <FiZap />
+              </span>
+              Crear con IA
+            </Button>
+
+            <Button
               variant="create"
               onClick={toggleDrawer}
               className="w-full sm:w-auto"
@@ -169,8 +184,17 @@ const Products = () => {
       />
       <BulkActionDrawer ids={selectedIds} title="productos" />
 
+      <AiProductModal
+        isOpen={isAiModalOpen}
+        onClose={() => setIsAiModalOpen(false)}
+        onProductGenerated={(data) => {
+          setAiGeneratedData(data);
+          toggleDrawer();
+        }}
+      />
+
       <MainDrawer>
-        <ProductDrawer id={selectedId} />
+        <ProductDrawer id={selectedId} aiInitialData={aiGeneratedData} onAiDataConsumed={() => setAiGeneratedData(null)} />
       </MainDrawer>
       <AnimatedContent>
         <Card className="min-w-0 shadow-sm overflow-hidden bg-white dark:bg-gray-800 rounded-t-lg rounded-0 mb-4">

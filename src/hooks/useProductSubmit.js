@@ -9,6 +9,7 @@ import useAsync from "@/hooks/useAsync";
 import useUtilsFunction from "./useUtilsFunction";
 import { SidebarContext } from "@/context/SidebarContext";
 import AttributeServices from "@/services/AttributeServices";
+import CategoryServices from "@/services/CategoryServices";
 import ProductServices from "@/services/ProductServices";
 import { notifyError, notifySuccess } from "@/utils/toast";
 import useTranslationValue from "./useTranslationValue";
@@ -21,6 +22,7 @@ const useProductSubmit = (id) => {
   const { openDrawer, closeDrawer } = useAction();
 
   const { data: attribue } = useAsync(AttributeServices.getShowingAttributes);
+  const { data: allCategories } = useAsync(CategoryServices.getAllCategories);
 
   // react ref
   const resetRef = useRef([]);
@@ -58,6 +60,47 @@ const useProductSubmit = (id) => {
   const [openModal, setOpenModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [slug, setSlug] = useState("");
+
+  // v2 new fields
+  const [productType, setProductType] = useState("general");
+  const [petCompatibility, setPetCompatibility] = useState({
+    petType: [],
+    ageRange: [],
+    size: [],
+    breed: [],
+    specialNeeds: [],
+  });
+  const [quickInfo, setQuickInfo] = useState({
+    pet: "",
+    age: "",
+    size: "",
+    weightRange: "",
+    highlight: "",
+  });
+  const [packageInfo, setPackageInfo] = useState({
+    weight: "",
+    unit: "kg",
+    servings: "",
+  });
+  const [benefits, setBenefits] = useState({});
+  const [features, setFeatures] = useState({});
+  const [ingredients, setIngredients] = useState({});
+  const [nutritionTable, setNutritionTable] = useState({
+    guaranteedAnalysis: [],
+    calories: "",
+  });
+  const [feedingGuide, setFeedingGuide] = useState({});
+  const [indications, setIndications] = useState({});
+  const [warnings, setWarnings] = useState({});
+  const [dosage, setDosage] = useState({});
+  const [technicalSpecs, setTechnicalSpecs] = useState([]);
+  const [consumptionGuide, setConsumptionGuide] = useState([]);
+  const [productHighlights, setProductHighlights] = useState([]);
+  const [keyFacts, setKeyFacts] = useState([]);
+  const [visualTags, setVisualTags] = useState([]);
+  const [iconTags, setIconTags] = useState([]);
+  const [recommendedFor, setRecommendedFor] = useState({});
+  const [brandInfo, setBrandInfo] = useState({});
 
   const { handlerTextTranslateHandler } = useTranslationValue();
   const { showingTranslateValue, getNumber, getNumberTwo } = useUtilsFunction();
@@ -152,6 +195,28 @@ const useProductSubmit = (id) => {
         },
         isCombination: updatedVariants?.length > 0 ? isCombination : false,
         variants: isCombination ? updatedVariants : [],
+
+        // v2 new fields
+        productType,
+        petCompatibility,
+        quickInfo,
+        packageInfo,
+        benefits,
+        features,
+        ingredients,
+        nutritionTable,
+        feedingGuide,
+        indications,
+        warnings,
+        dosage,
+        technicalSpecs,
+        consumptionGuide,
+        productHighlights,
+        keyFacts,
+        visualTags,
+        iconTags,
+        recommendedFor,
+        brandInfo,
       };
 
       // console.log("productData ===========>", productData, "data", data);
@@ -276,6 +341,28 @@ const useProductSubmit = (id) => {
         resetRefTwo?.current?.resetSelectedValues();
       }
 
+      // reset v2 fields
+      setProductType("general");
+      setPetCompatibility({ petType: [], ageRange: [], size: [], breed: [], specialNeeds: [] });
+      setQuickInfo({ pet: "", age: "", size: "", weightRange: "", highlight: "" });
+      setPackageInfo({ weight: "", unit: "kg", servings: "" });
+      setBenefits({});
+      setFeatures({});
+      setIngredients({});
+      setNutritionTable({ guaranteedAnalysis: [], calories: "" });
+      setFeedingGuide({});
+      setIndications({});
+      setWarnings({});
+      setDosage({});
+      setTechnicalSpecs([]);
+      setConsumptionGuide([]);
+      setProductHighlights([]);
+      setKeyFacts([]);
+      setVisualTags([]);
+      setIconTags([]);
+      setRecommendedFor({});
+      setBrandInfo({});
+
       clearErrors("sku");
       clearErrors("title");
       clearErrors("slug");
@@ -358,6 +445,48 @@ const useProductSubmit = (id) => {
             setTotalStock(res.stock);
             setOriginalPrice(res?.prices?.originalPrice);
             setPrice(res?.prices?.price);
+
+            // load v2 fields
+            if (res.productType) setProductType(res.productType);
+            if (res.petCompatibility) setPetCompatibility({
+              petType: res.petCompatibility.petType || [],
+              ageRange: res.petCompatibility.ageRange || [],
+              size: res.petCompatibility.size || [],
+              breed: res.petCompatibility.breed || [],
+              specialNeeds: res.petCompatibility.specialNeeds || [],
+            });
+            if (res.quickInfo) setQuickInfo({
+              pet: res.quickInfo.pet || "",
+              age: res.quickInfo.age || "",
+              size: res.quickInfo.size || "",
+              weightRange: res.quickInfo.weightRange || "",
+              highlight: res.quickInfo.highlight || "",
+            });
+            if (res.packageInfo) setPackageInfo({
+              weight: res.packageInfo.weight || "",
+              unit: res.packageInfo.unit || "kg",
+              servings: res.packageInfo.servings || "",
+            });
+            if (res.benefits) setBenefits(res.benefits);
+            if (res.features) setFeatures(res.features);
+            if (res.ingredients) setIngredients(res.ingredients);
+            if (res.nutritionTable) setNutritionTable({
+              guaranteedAnalysis: res.nutritionTable.guaranteedAnalysis || [],
+              calories: res.nutritionTable.calories || "",
+              caloriesPerKg: res.nutritionTable.caloriesPerKg || "",
+            });
+            if (res.feedingGuide) setFeedingGuide(res.feedingGuide);
+            if (res.indications) setIndications(res.indications);
+            if (res.warnings) setWarnings(res.warnings);
+            if (res.dosage) setDosage(res.dosage);
+            if (res.technicalSpecs) setTechnicalSpecs(res.technicalSpecs);
+            if (res.consumptionGuide) setConsumptionGuide(res.consumptionGuide);
+            if (res.productHighlights) setProductHighlights(res.productHighlights);
+            if (res.keyFacts) setKeyFacts(res.keyFacts);
+            if (res.visualTags) setVisualTags(res.visualTags);
+            if (res.iconTags) setIconTags(res.iconTags);
+            if (res.recommendedFor) setRecommendedFor(res.recommendedFor);
+            if (res.brandInfo) setBrandInfo(res.brandInfo);
           }
         } catch (err) {
           notifyError(err?.response?.data?.message || err?.message);
@@ -653,6 +782,160 @@ const useProductSubmit = (id) => {
     setSlug(value.toLowerCase().replace(/[^A-Z0-9]+/gi, "-"));
   };
 
+  // ─── Apply AI-generated data to all form fields ────────────────────────────
+  const applyAiData = (aiData) => {
+    if (!aiData) return;
+
+    const categoryMap = new Map(
+      (Array.isArray(allCategories) ? allCategories : []).map((category) => [
+        String(category?._id),
+        showingTranslateValue(category?.name, lang),
+      ])
+    );
+
+    const toCategoryOption = (categoryId) => {
+      const normalizedId = String(categoryId || "").trim();
+      if (!normalizedId) {
+        return null;
+      }
+
+      return {
+        _id: normalizedId,
+        name: categoryMap.get(normalizedId) || normalizedId,
+      };
+    };
+
+    // Basic fields
+    if (aiData.title?.es) setValue("title", aiData.title.es);
+    if (aiData.description?.es) setValue("description", aiData.description.es);
+    if (aiData.slug) {
+      setValue("slug", aiData.slug);
+      setSlug(aiData.slug);
+    }
+    if (aiData.prices) {
+      setValue("originalPrice", aiData.prices.originalPrice || 0);
+      setValue("price", aiData.prices.price || 0);
+      setOriginalPrice(aiData.prices.originalPrice || 0);
+      setPrice(aiData.prices.price || 0);
+    }
+    if (aiData.stock != null) {
+      setValue("stock", aiData.stock);
+      setQuantity(aiData.stock);
+    }
+    if (aiData.sku) {
+      setValue("sku", aiData.sku);
+      setSku(aiData.sku);
+    }
+    if (aiData.barcode) {
+      setValue("barcode", aiData.barcode);
+      setBarcode(aiData.barcode);
+    }
+    if (Array.isArray(aiData.tag)) setTag(aiData.tag);
+
+    // Category & Brand & Pet (IDs from backend)
+    if (aiData.pet) setSelectedPet(aiData.pet);
+    if (aiData.brand) setSelectedBrand(aiData.brand);
+    if (aiData.category || Array.isArray(aiData.categories)) {
+      const selectedFromAi = [
+        ...(Array.isArray(aiData.categories) ? aiData.categories : []),
+        aiData.category,
+      ]
+        .map((categoryId) => toCategoryOption(categoryId))
+        .filter(Boolean)
+        .filter(
+          (item, index, self) =>
+            self.findIndex((it) => String(it._id) === String(item._id)) === index
+        );
+
+      if (selectedFromAi.length > 0) {
+        setSelectedCategory(selectedFromAi);
+      }
+
+      const primaryCategory = toCategoryOption(aiData.category) || selectedFromAi[0] || null;
+      if (primaryCategory) {
+        setDefaultCategory([primaryCategory]);
+      }
+    }
+
+    // Product type
+    if (aiData.productType) setProductType(aiData.productType);
+
+    // Pet compatibility
+    if (aiData.petCompatibility) {
+      setPetCompatibility({
+        petType: aiData.petCompatibility.petType || [],
+        ageRange: aiData.petCompatibility.ageRange || [],
+        size: aiData.petCompatibility.size || [],
+        breed: aiData.petCompatibility.breed || [],
+        specialNeeds: aiData.petCompatibility.specialNeeds || [],
+      });
+    }
+
+    // Quick info
+    if (aiData.quickInfo) {
+      setQuickInfo({
+        pet: aiData.quickInfo.pet || "",
+        age: aiData.quickInfo.age || "",
+        size: aiData.quickInfo.size || "",
+        weightRange: aiData.quickInfo.weightRange || "",
+        highlight: aiData.quickInfo.highlight || "",
+      });
+    }
+
+    // Package info
+    if (aiData.packageInfo) {
+      setPackageInfo({
+        weight: aiData.packageInfo.weight || "",
+        unit: aiData.packageInfo.unit || "kg",
+        servings: aiData.packageInfo.servings || "",
+      });
+    }
+
+    // Rich text fields (multilingual)
+    if (aiData.benefits) setBenefits(aiData.benefits);
+    if (aiData.features) setFeatures(aiData.features);
+    if (aiData.ingredients) setIngredients(aiData.ingredients);
+    if (aiData.feedingGuide) setFeedingGuide(aiData.feedingGuide);
+    if (aiData.indications) setIndications(aiData.indications);
+    if (aiData.warnings) setWarnings(aiData.warnings);
+    if (aiData.dosage) setDosage(aiData.dosage);
+    if (aiData.recommendedFor) setRecommendedFor(aiData.recommendedFor);
+    if (aiData.brandInfo) setBrandInfo(aiData.brandInfo);
+
+    // Nutrition
+    if (aiData.nutritionTable) {
+      setNutritionTable({
+        guaranteedAnalysis: aiData.nutritionTable.guaranteedAnalysis || [],
+        calories: aiData.nutritionTable.calories || "",
+        caloriesPerKg: aiData.nutritionTable.caloriesPerKg || "",
+      });
+    }
+
+    // Technical specs
+    if (Array.isArray(aiData.technicalSpecs)) setTechnicalSpecs(aiData.technicalSpecs);
+
+    // Consumption guide
+    if (Array.isArray(aiData.consumptionGuide)) setConsumptionGuide(aiData.consumptionGuide);
+
+    // Marketing fields
+    if (Array.isArray(aiData.productHighlights)) setProductHighlights(aiData.productHighlights);
+    if (Array.isArray(aiData.keyFacts)) setKeyFacts(aiData.keyFacts);
+    if (Array.isArray(aiData.visualTags)) setVisualTags(aiData.visualTags);
+    if (Array.isArray(aiData.iconTags)) setIconTags(aiData.iconTags);
+
+    // Variants (AI generates with _variantLabel format — store for reference but don't map to attribute IDs)
+    if (Array.isArray(aiData.variants) && aiData.variants.length > 0) {
+      setIsCombination(true);
+      // Filter out AI-generated variants with _variantLabel (need manual attribute mapping)
+      // but set combination flag so user knows variants are expected
+    } else {
+      setIsCombination(false);
+    }
+
+    setIsBasicComplete(false);
+    handleProductTap("Información Básica", true);
+  };
+
   return {
     tag,
     control,
@@ -702,6 +985,48 @@ const useProductSubmit = (id) => {
     setSelectedPet,
     selectedBrand,
     setSelectedBrand,
+    // v2 new fields
+    productType,
+    setProductType,
+    petCompatibility,
+    setPetCompatibility,
+    quickInfo,
+    setQuickInfo,
+    packageInfo,
+    setPackageInfo,
+    benefits,
+    setBenefits,
+    features,
+    setFeatures,
+    ingredients,
+    setIngredients,
+    nutritionTable,
+    setNutritionTable,
+    feedingGuide,
+    setFeedingGuide,
+    indications,
+    setIndications,
+    warnings,
+    setWarnings,
+    dosage,
+    setDosage,
+    technicalSpecs,
+    setTechnicalSpecs,
+    consumptionGuide,
+    setConsumptionGuide,
+    productHighlights,
+    setProductHighlights,
+    keyFacts,
+    setKeyFacts,
+    visualTags,
+    setVisualTags,
+    iconTags,
+    setIconTags,
+    recommendedFor,
+    setRecommendedFor,
+    brandInfo,
+    setBrandInfo,
+    applyAiData,
   };
 };
 

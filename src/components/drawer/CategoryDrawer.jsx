@@ -173,6 +173,9 @@ const CategoryDrawer = ({ id, data }) => {
             <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
               <LabelArea label={t("ParentCategory")} />
               <div className="col-span-8 sm:col-span-4 relative">
+                <p className="mb-2 text-xs text-amber-600 dark:text-amber-400">
+                  Usa categorías y subcategorías solo para clasificar productos. Las marcas deben crearse en el módulo de marcas, no como hijas de categoría.
+                </p>
                 <Input
                   readOnly
                   {...register(`parent`, {

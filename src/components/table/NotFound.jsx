@@ -1,5 +1,5 @@
 import React from "react";
-import noResult from "@/assets/img/no-result.svg";
+import noResult from "@/assets/img/no-result.webp";
 
 const NotFound = ({ title }) => {
   return (

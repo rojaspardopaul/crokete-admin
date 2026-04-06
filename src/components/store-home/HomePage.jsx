@@ -66,6 +66,8 @@ const HomePage = ({
   dailyNeeds,
   setFeaturePromo,
   featurePromo,
+  setFooterInfo,
+  footerInfo,
   setFooterBlock1,
   footerBlock1,
   setFooterBlock2,
@@ -1663,6 +1665,123 @@ const HomePage = ({
                   <Error errorName={errors.promo_offer} />
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/*  ====================================================== Sección Informativa ====================================================== */}
+        <div
+          className={`col-span-12 md:col-span-12 lg:col-span-12 ${
+            window.innerWidth < 400 ? "md:mt-0 mt-40" : "md:mt-0 mt-10"
+          }`}
+        >
+          <div className="inline-flex md:text-lg text-base text-gray-800 font-semibold dark:text-gray-400 mb-3">
+            <FiSettings className="mt-1 mr-2" /> {t("InformativeSectionTitle")}
+          </div>
+
+          <hr className="md:mb-12 mb-3" />
+
+          <div className="xl:px-10 flex-grow scrollbar-hide w-full max-h-full pb-0">
+            <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3">
+              <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                {t("EnableThisBlock")}
+              </label>
+              <div className="sm:col-span-4">
+                <SwitchToggle
+                  title=""
+                  handleProcess={setFooterInfo}
+                  processOption={footerInfo}
+                  name={footerInfo}
+                />
+              </div>
+            </div>
+
+            <div
+              style={{
+                height: footerInfo ? "auto" : 0,
+                transition: "all 0.5s",
+                visibility: !footerInfo ? "hidden" : "visible",
+                opacity: !footerInfo ? "0" : "1",
+              }}
+            >
+              {[1, 2, 3, 4].map((n) => (
+                <div key={n} className="mb-6">
+                  <div className="inline-flex md:text-base text-sm mb-3 text-gray-500 dark:text-gray-400">
+                    <strong>{t("Card")} {n}</strong>
+                  </div>
+                  <hr className="mb-4" />
+
+                  <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3 relative">
+                    <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                      {t("Title")}
+                    </label>
+                    <div className="sm:col-span-4">
+                      <InputAreaTwo
+                        register={register}
+                        label="Title"
+                        name={`info_card${n}_title`}
+                        type="text"
+                        placeholder={t("Title")}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3 relative">
+                    <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                      {t("Subtitle")}
+                    </label>
+                    <div className="sm:col-span-4">
+                      <InputAreaTwo
+                        register={register}
+                        label="Subtitle"
+                        name={`info_card${n}_subtitle`}
+                        type="text"
+                        placeholder={t("Subtitle")}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3 relative">
+                    <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                      {t("Description")}
+                    </label>
+                    <div className="sm:col-span-4">
+                      <InputAreaTwo
+                        register={register}
+                        label="Description"
+                        name={`info_card${n}_desc`}
+                        type="text"
+                        placeholder={t("Description")}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3 relative">
+                    <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                      {t("Icon")}
+                    </label>
+                    <div className="sm:col-span-4">
+                      <select
+                        {...register(`info_card${n}_icon`)}
+                        className="border h-12 text-sm focus:outline-none block w-full bg-gray-100 dark:bg-gray-700 dark:text-gray-300 border-transparent focus:bg-white focus:border-gray-300 rounded-md"
+                      >
+                        <option value="truck">🚚 Camión (Envío)</option>
+                        <option value="shield-check">🛡️ Escudo (Seguridad)</option>
+                        <option value="heart">❤️ Corazón (Favoritos)</option>
+                        <option value="award">🏆 Premio (Nivel)</option>
+                        <option value="star">⭐ Estrella</option>
+                        <option value="gift">🎁 Regalo</option>
+                        <option value="zap">⚡ Rayo</option>
+                        <option value="clock">🕐 Reloj</option>
+                        <option value="percent">💯 Porcentaje</option>
+                        <option value="tag">🏷️ Etiqueta</option>
+                        <option value="headphones">🎧 Soporte</option>
+                        <option value="package">📦 Paquete</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

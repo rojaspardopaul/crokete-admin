@@ -44,9 +44,20 @@ import useAsync from "@/hooks/useAsync";
 import PetServices from "@/services/PetServices";
 import BrandServices from "@/services/BrandServices";
 
+// v2 product form components
+import PetCompatibilityForm from "@/components/product/PetCompatibilityForm";
+import QuickInfoForm from "@/components/product/QuickInfoForm";
+import BenefitsFeaturesForm from "@/components/product/BenefitsFeaturesForm";
+import NutritionForm from "@/components/product/NutritionForm";
+import IndicationsForm from "@/components/product/IndicationsForm";
+import TechnicalSpecsForm from "@/components/product/TechnicalSpecsForm";
+import VisualTagsForm from "@/components/product/VisualTagsForm";
+import PackageInfoForm from "@/components/product/PackageInfoForm";
+import ConsumptionGuideForm from "@/components/product/ConsumptionGuideForm";
+
 //internal import
 
-const ProductDrawer = ({ id }) => {
+const ProductDrawer = ({ id, aiInitialData, onAiDataConsumed }) => {
   const { t } = useTranslation();
 
   const {
@@ -98,12 +109,62 @@ const ProductDrawer = ({ id }) => {
     setSelectedPet,
     selectedBrand,
     setSelectedBrand,
+    // v2 new fields
+    productType,
+    setProductType,
+    petCompatibility,
+    setPetCompatibility,
+    quickInfo,
+    setQuickInfo,
+    packageInfo,
+    setPackageInfo,
+    benefits,
+    setBenefits,
+    features,
+    setFeatures,
+    ingredients,
+    setIngredients,
+    nutritionTable,
+    setNutritionTable,
+    feedingGuide,
+    setFeedingGuide,
+    indications,
+    setIndications,
+    warnings,
+    setWarnings,
+    dosage,
+    setDosage,
+    technicalSpecs,
+    setTechnicalSpecs,
+    consumptionGuide,
+    setConsumptionGuide,
+    productHighlights,
+    setProductHighlights,
+    keyFacts,
+    setKeyFacts,
+    visualTags,
+    setVisualTags,
+    iconTags,
+    setIconTags,
+    recommendedFor,
+    setRecommendedFor,
+    brandInfo,
+    setBrandInfo,
+    applyAiData,
   } = useProductSubmit(id);
 
   const { currency, showingTranslateValue } = useUtilsFunction();
 
   const { data: petsData } = useAsync(PetServices.getShowingPets);
-  const { data: brandsData } = useAsync(BrandServices.getShowingBrands);
+  const { data: brandsData } = useAsync(BrandServices.getAllBrands);
+
+  // Apply AI-generated data when received
+  React.useEffect(() => {
+    if (aiInitialData && !id) {
+      applyAiData(aiInitialData);
+      if (onAiDataConsumed) onAiDataConsumed();
+    }
+  }, [aiInitialData]);
 
   return (
     <>
@@ -146,12 +207,74 @@ const ProductDrawer = ({ id }) => {
         )}
       </div>
 
-      <div className="flex items-center justify-between h-12 px-4 flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-700">
-        <ul className="flex items-center">
+      <div className="flex items-center justify-between px-4 flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-700">
+        <ul className="flex items-center flex-wrap gap-y-1 py-2">
           <li className="mr-2">
             <ActiveButton
               tapValue={tapValue}
               activeValue="Información Básica"
+              handleProductTap={handleProductTap}
+            />
+          </li>
+          <li className="mr-2">
+            <ActiveButton
+              tapValue={tapValue}
+              activeValue="Mascota"
+              handleProductTap={handleProductTap}
+            />
+          </li>
+          <li className="mr-2">
+            <ActiveButton
+              tapValue={tapValue}
+              activeValue="Quick Info"
+              handleProductTap={handleProductTap}
+            />
+          </li>
+          <li className="mr-2">
+            <ActiveButton
+              tapValue={tapValue}
+              activeValue="Beneficios"
+              handleProductTap={handleProductTap}
+            />
+          </li>
+          {productType === "food" && (
+            <li className="mr-2">
+              <ActiveButton
+                tapValue={tapValue}
+                activeValue="Nutrición"
+                handleProductTap={handleProductTap}
+              />
+            </li>
+          )}
+          {productType === "medicine" && (
+            <li className="mr-2">
+              <ActiveButton
+                tapValue={tapValue}
+                activeValue="Indicaciones"
+                handleProductTap={handleProductTap}
+              />
+            </li>
+          )}
+          {productType === "accessory" && (
+            <li className="mr-2">
+              <ActiveButton
+                tapValue={tapValue}
+                activeValue="Especificaciones"
+                handleProductTap={handleProductTap}
+              />
+            </li>
+          )}
+          <li className="mr-2">
+            <ActiveButton
+              tapValue={tapValue}
+              activeValue="Empaque"
+              handleProductTap={handleProductTap}
+            />
+          </li>
+          <li className="mr-2">
+            <ActiveButton
+              tapValue={tapValue}
+              activeValue="Tags"
               handleProductTap={handleProductTap}
             />
           </li>
@@ -178,10 +301,21 @@ const ProductDrawer = ({ id }) => {
         <form onSubmit={handleSubmit(onSubmit)} className="block" id="block">
           {tapValue === "Información Básica" && (
             <div className="px-6 pt-8 flex-grow w-full h-full max-h-full pb-40 md:pb-32 lg:pb-32 xl:pb-32">
-              {/* <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-                <LabelArea label={t("ProductID")} />
-                <div className="col-span-8 sm:col-span-4">{productId}</div>
-              </div> */}
+              <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+                <LabelArea label="Tipo de producto" />
+                <div className="col-span-8 sm:col-span-4">
+                  <select
+                    value={productType}
+                    onChange={(e) => setProductType(e.target.value)}
+                    className="border h-12 text-sm focus:outline-none block w-full bg-gray-100 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-500 border-transparent focus:bg-white focus:border-gray-300 rounded-md"
+                  >
+                    <option value="general">General</option>
+                    <option value="food">Croquetas / Alimento</option>
+                    <option value="medicine">Farmacia Veterinaria</option>
+                    <option value="accessory">Accesorios</option>
+                  </select>
+                </div>
+              </div>
               <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
                 <LabelArea label={t("ProductTitleName")} />
                 <div className="col-span-8 sm:col-span-4">
@@ -262,6 +396,9 @@ const ProductDrawer = ({ id }) => {
                     setSelectedCategory={setSelectedCategory}
                     setDefaultCategory={setDefaultCategory}
                   />
+                  <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                    La categoría organiza el catálogo. La marca del producto se define por separado en el siguiente campo.
+                  </p>
                 </div>
               </div>
 
@@ -318,6 +455,9 @@ const ProductDrawer = ({ id }) => {
                       </option>
                     ))}
                   </select>
+                  <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                    Usa este selector para la marca. No la dupliques como subcategoría.
+                  </p>
                 </div>
               </div>
 
@@ -409,6 +549,91 @@ const ProductDrawer = ({ id }) => {
                 </div>
               </div>
             </div>
+          )}
+
+          {tapValue === "Mascota" && (
+            <PetCompatibilityForm
+              petCompatibility={petCompatibility}
+              setPetCompatibility={setPetCompatibility}
+              recommendedFor={recommendedFor}
+              setRecommendedFor={setRecommendedFor}
+              language={language}
+            />
+          )}
+
+          {tapValue === "Quick Info" && (
+            <QuickInfoForm
+              quickInfo={quickInfo}
+              setQuickInfo={setQuickInfo}
+            />
+          )}
+
+          {tapValue === "Beneficios" && (
+            <BenefitsFeaturesForm
+              benefits={benefits}
+              setBenefits={setBenefits}
+              features={features}
+              setFeatures={setFeatures}
+              productHighlights={productHighlights}
+              setProductHighlights={setProductHighlights}
+              language={language}
+            />
+          )}
+
+          {tapValue === "Nutrición" && productType === "food" && (
+            <>
+              <NutritionForm
+                ingredients={ingredients}
+                setIngredients={setIngredients}
+                nutritionTable={nutritionTable}
+                setNutritionTable={setNutritionTable}
+                feedingGuide={feedingGuide}
+                setFeedingGuide={setFeedingGuide}
+                keyFacts={keyFacts}
+                setKeyFacts={setKeyFacts}
+                language={language}
+              />
+              <ConsumptionGuideForm
+                consumptionGuide={consumptionGuide}
+                setConsumptionGuide={setConsumptionGuide}
+              />
+            </>
+          )}
+
+          {tapValue === "Indicaciones" && productType === "medicine" && (
+            <IndicationsForm
+              indications={indications}
+              setIndications={setIndications}
+              warnings={warnings}
+              setWarnings={setWarnings}
+              dosage={dosage}
+              setDosage={setDosage}
+              language={language}
+            />
+          )}
+
+          {tapValue === "Especificaciones" && productType === "accessory" && (
+            <TechnicalSpecsForm
+              technicalSpecs={technicalSpecs}
+              setTechnicalSpecs={setTechnicalSpecs}
+              language={language}
+            />
+          )}
+
+          {tapValue === "Empaque" && (
+            <PackageInfoForm
+              packageInfo={packageInfo}
+              setPackageInfo={setPackageInfo}
+            />
+          )}
+
+          {tapValue === "Tags" && (
+            <VisualTagsForm
+              visualTags={visualTags}
+              setVisualTags={setVisualTags}
+              iconTags={iconTags}
+              setIconTags={setIconTags}
+            />
           )}
 
           {tapValue === "Variante" &&

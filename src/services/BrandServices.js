@@ -1,10 +1,15 @@
 import requests from "./httpService";
+import { normalizeId } from "@/utils/categoryHelpers";
 
 const BrandServices = {
   getAllBrands: async () => {
     return requests.get("/brands");
   },
-  getShowingBrands: async () => {
+  getShowingBrands: async (category = "") => {
+    const categoryId = normalizeId(category).trim();
+    if (categoryId) {
+      return requests.get(`/brands/show?category=${categoryId}`);
+    }
     return requests.get("/brands/show");
   },
   getBrandById: async (id) => {

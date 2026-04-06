@@ -10,6 +10,7 @@ import {
   FiGift,
   FiActivity,
   FiFileText,
+  FiMessageSquare,
 } from "react-icons/fi";
 
 /**
@@ -66,6 +67,12 @@ const sidebar = [
     path: "/orders",
     icon: FiCompass,
     name: "Orders",
+  },
+
+  {
+    path: "/reviews",
+    icon: FiMessageSquare,
+    name: "Reseñas",
   },
 
   {

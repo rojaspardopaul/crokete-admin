@@ -85,6 +85,8 @@ const StoreHome = () => {
     dailyNeeds,
     setFeaturePromo,
     featurePromo,
+    setFooterInfo,
+    footerInfo,
     setFooterBlock1,
     footerBlock1,
     setFooterBlock2,
@@ -505,6 +507,8 @@ const StoreHome = () => {
                   dailyNeeds={dailyNeeds}
                   setFeaturePromo={setFeaturePromo}
                   featurePromo={featurePromo}
+                  setFooterInfo={setFooterInfo}
+                  footerInfo={footerInfo}
                   setFooterBlock1={setFooterBlock1}
                   footerBlock1={footerBlock1}
                   setFooterBlock2={setFooterBlock2}
