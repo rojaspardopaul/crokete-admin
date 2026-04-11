@@ -46,38 +46,14 @@ const AiProductModal = ({ isOpen, onClose, onProductGenerated }) => {
 
   // Fetch categories, brands, and AI providers
   const { data: categoryTree } = useAsync(CategoryServices.getAllCategory);
-  const [brands, setBrands] = useState([]);
+  const { data: brandsData } = useAsync(BrandServices.getAllBrands);
+  const brands = Array.isArray(brandsData) ? brandsData : [];
 
   const categoryOptions = React.useMemo(() => {
     const source = Array.isArray(categoryTree) ? categoryTree : [];
 
     return flattenCategoryTree(source);
   }, [categoryTree]);
-
-  useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-
-    BrandServices.getShowingBrands(categoryId || "")
-      .then((data) => {
-        setBrands(Array.isArray(data) ? data : []);
-      })
-      .catch(() => {
-        setBrands([]);
-      });
-  }, [isOpen, categoryId]);
-
-  useEffect(() => {
-    if (!brandId) {
-      return;
-    }
-
-    const exists = brands.some((brand) => String(brand?._id) === String(brandId));
-    if (!exists) {
-      setBrandId("");
-    }
-  }, [brands, brandId]);
 
   useEffect(() => {
     if (isOpen) {
