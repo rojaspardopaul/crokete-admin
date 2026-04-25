@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   Select,
   SelectContent,
@@ -34,13 +34,25 @@ const SelectStatus = ({ id, order }) => {
   const queryClient = useQueryClient();
   const { setIsUpdate } = useContext(SidebarContext);
   const [pendingStatus, setPendingStatus] = useState(null);
+  // Controlled value — tracks confirmed status locally so the trigger renders correctly
+  const [currentStatus, setCurrentStatus] = useState(order?.status);
+
+  // Keep in sync if the parent re-renders with fresh order data
+  useEffect(() => {
+    setCurrentStatus(order?.status);
+  }, [order?.status]);
 
   const confirmChangeStatus = () => {
     OrderServices.updateOrder(id, { status: pendingStatus })
       .then((res) => {
         notifySuccess(res.message);
+        setCurrentStatus(pendingStatus);
         queryClient.invalidateQueries({
           queryKey: ["dashboardRecentOrder"],
+          exact: false,
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["allOrders"],
           exact: false,
         });
         setIsUpdate(true);
@@ -55,11 +67,13 @@ const SelectStatus = ({ id, order }) => {
   return (
     <>
       <Select
-        onValueChange={(value) => setPendingStatus(value)}
-        className="h-8"
+        value={currentStatus}
+        onValueChange={(value) => {
+          if (value !== currentStatus) setPendingStatus(value);
+        }}
       >
-        <SelectTrigger className="h-8 capitalize">
-          <SelectValue placeholder={STATUS_LABELS[order?.status] || order?.status} />
+        <SelectTrigger className="h-8 min-w-[130px] capitalize">
+          <SelectValue />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="pedido">Pedido</SelectItem>

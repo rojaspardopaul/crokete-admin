@@ -158,7 +158,7 @@ const Notifications = () => {
     <>
       <div className="lg:flex lg:items-center lg:justify-between py-8 gap-2">
         <div className="min-w-0 flex-1">
-          <PageTitle>Notifications</PageTitle>
+          <PageTitle>Notificaciones</PageTitle>
         </div>
       </div>
 
@@ -173,7 +173,7 @@ const Notifications = () => {
               <span className="mr-2">
                 <FiMail />
               </span>
-              Mark is read
+              Marcar como leído
             </Button>
           </div>
 
@@ -187,7 +187,7 @@ const Notifications = () => {
               <span className="mr-3">
                 <FiTrash2 />
               </span>
-              Delete
+              Eliminar
             </Button>
           </div>
         </CardContent>
@@ -197,7 +197,7 @@ const Notifications = () => {
         <CardContent className="p-0">
           <div className="p-4 dark:text-gray-300">
             <p className="text-sm font-semibold text-teal-700">
-              Unread Notification ({totalUnreadDoc})
+              Notificaciones sin leer ({totalUnreadDoc})
             </p>
           </div>
 
@@ -212,7 +212,7 @@ const Notifications = () => {
                   isChecked={isCheckAll}
                 />
                 <p className="text-xs font-semibold text-gray-500 my-auto dark:text-gray-300 ml-6 uppercase">
-                  Notification
+                  Notificación
                 </p>
               </div>
 
@@ -223,7 +223,7 @@ const Notifications = () => {
               </div> */}
               <div className="text-right">
                 <p className="text-xs font-semibold text-gray-500 my-auto dark:text-gray-300 mr-2 uppercase">
-                  Action
+                  Acción
                 </p>
               </div>
             </div>
@@ -283,9 +283,9 @@ const Notifications = () => {
 
                                   <p className="flex items-center text-xs text-gray-400">
                                     {value.productId ? (
-                                      <Badge variant="danger">Stock Out</Badge>
+                                      <Badge variant="danger">Sin stock</Badge>
                                     ) : (
-                                      <Badge variant="success">New Order</Badge>
+                                      <Badge variant="success">Nuevo pedido</Badge>
                                     )}
                                     <span className="ml-2">
                                       {showDateTimeFormat(value?.createdAt)}
@@ -327,7 +327,7 @@ const Notifications = () => {
                                 </button>
 
                                 <div className="absolute hidden group-hover:inline-block bg-gray-50 dark:text-white mr-8 mb-1 right-0 z-50 px-3 py-2 text-sm font-medium text-red-600 rounded-lg shadow-sm tooltip dark:bg-gray-700">
-                                  Delete
+                                  Eliminar
                                 </div>
                               </div>
                             </TableCell>
@@ -345,7 +345,7 @@ const Notifications = () => {
                           type="button"
                           className="focus:outline-none text-blue-700 hover:underline transition ease-out duration-200 dark:text-gray-400"
                         >
-                          See more notifications
+                          Ver más notificaciones
                         </button>
                       </div>
                     ) : null}

@@ -114,7 +114,7 @@ const LoyaltySettings = () => {
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold text-gray-800">
-                    Crokete Rewards
+                    Puntos de Recompensa
                   </h2>
                   <p className="text-sm text-gray-500">
                     Configura el programa de recompensas para tus clientes

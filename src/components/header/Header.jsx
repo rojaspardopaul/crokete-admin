@@ -246,7 +246,7 @@ const Header = () => {
                 >
                   <Scrollbars>
                     {data?.length === 0 ? (
-                      <NotFoundTwo title="No new notification" />
+                      <NotFoundTwo title="Sin notificaciones nuevas" />
                     ) : (
                       <ul className="block text-sm border-t border-gray-100 dark:border-gray-700 rounded-md">
                         {data?.map((value, index) => {
@@ -288,9 +288,9 @@ const Header = () => {
 
                                   <p className="flex items-center text-xs text-gray-400">
                                     {value.productId ? (
-                                      <Badge variant="danger">Stock Out</Badge>
+                                      <Badge variant="danger">Sin stock</Badge>
                                     ) : (
-                                      <Badge variant="success">New Order</Badge>
+                                      <Badge variant="success">Nuevo pedido</Badge>
                                     )}
                                     <span className="ml-2">
                                       {showDateTimeFormat(value.createdAt)}
@@ -323,7 +323,7 @@ const Header = () => {
                                 </button>
 
                                 <div className="absolute hidden group-hover:inline-block bg-gray-50 dark:text-red-400 mr-6 mb-1 right-0 z-50 px-3 py-2 text-sm font-medium text-red-600 rounded-lg shadow-sm tooltip dark:bg-gray-700">
-                                  Delete
+                                  Eliminar
                                 </div>
                               </div>
                             </li>
@@ -339,7 +339,7 @@ const Header = () => {
                           to={"/notifications"}
                           className="focus:outline-none hover:underline transition ease-out duration-200"
                         >
-                          Show all notifications
+                          Ver todas las notificaciones
                         </Link>
                       </div>
                     )}
