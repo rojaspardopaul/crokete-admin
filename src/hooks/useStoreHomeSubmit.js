@@ -1,3 +1,4 @@
+import DOMPurify from "dompurify";
 import { EditorState, convertToRaw } from "draft-js";
 import { stateFromHTML } from "draft-js-import-html";
 import draftToHtml from "draftjs-to-html";
@@ -503,7 +504,7 @@ const useStoreHomeSubmit = () => {
             description: handleRemoveEmptyKey({
               ...resData?.privacy_policy?.description,
               [language]: textEdit
-                ? draftToHtml(convertToRaw(textEdit.getCurrentContent()))
+                ? DOMPurify.sanitize(draftToHtml(convertToRaw(textEdit.getCurrentContent())))
                 : "",
             }),
           },
@@ -518,9 +519,9 @@ const useStoreHomeSubmit = () => {
             description: {
               ...resData?.term_and_condition?.description,
               [language]: termsConditionsTextEdit
-                ? draftToHtml(
+                ? DOMPurify.sanitize(draftToHtml(
                     convertToRaw(termsConditionsTextEdit.getCurrentContent())
-                  )
+                  ))
                 : "",
             },
           },

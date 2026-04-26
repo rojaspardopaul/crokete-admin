@@ -232,13 +232,13 @@ const InvoicePDF = ({ data, globalSetting }) => {
               <View style={[styles.col4, tw("text-right")]}>
                 <Text style={tw("text-sm")}>
                   {currency}
-                  {getNumberTwo(item.price)}
+                  {getNumberTwo(item.originalPrice || item.price)}
                 </Text>
               </View>
               <View style={[styles.col5, tw("text-right")]}>
                 <Text style={tw("text-sm")}>
                   {currency}
-                  {getNumberTwo(item.price * item.quantity)}
+                  {getNumberTwo((item.originalPrice || item.price) * item.quantity)}
                 </Text>
               </View>
             </View>
@@ -251,7 +251,7 @@ const InvoicePDF = ({ data, globalSetting }) => {
             <Text style={tw("text-sm text-gray-600")}>Subtotal:</Text>
             <Text style={tw("text-sm")}>
               {currency}
-              {getNumberTwo(data?.subTotal)}
+              {getNumberTwo((data?.cart || []).reduce((acc, item) => acc + ((item.originalPrice || item.price) * item.quantity), 0))}
             </Text>
           </View>
 

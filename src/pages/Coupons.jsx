@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+﻿import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { CustomPagination as Pagination } from "@/components/ui/pagination";
@@ -200,7 +200,7 @@ const Coupons = () => {
               // <Loading loading={loading} />
               <TableLoading row={12} col={8} width={140} height={20} />
             ) : error ? (
-              <span className="text-center mx-auto text-red-500">{error}</span>
+              <span className="text-center mx-auto text-red-500">{error?.message ?? error}</span>
             ) : serviceData?.length !== 0 ? (
               <div>
                 <TableContainer className="mb-8 rounded-b-lg">

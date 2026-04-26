@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+﻿import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { CustomPagination as Pagination } from "@/components/ui/pagination";
@@ -166,7 +166,7 @@ const Languages = () => {
               // <Loading loading={loading} />
               <TableLoading row={12} col={7} width={163} height={20} />
             ) : error ? (
-              <span className="text-center mx-auto text-red-500">{error}</span>
+              <span className="text-center mx-auto text-red-500">{error?.message ?? error}</span>
             ) : (
               data.length !== 0 && (
                 <div>

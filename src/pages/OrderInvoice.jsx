@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+﻿import { useParams } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
 import React, { useContext, useRef, useState } from "react";
 import { FiPrinter, FiMail } from "react-icons/fi";
@@ -180,7 +180,7 @@ const OrderInvoice = () => {
           {loading ? (
             <Loading loading={loading} />
           ) : error ? (
-            <span className="text-center mx-auto text-red-500">{error}</span>
+            <span className="text-center mx-auto text-red-500">{error?.message ?? error}</span>
           ) : (
             <TableContainer className="my-8">
               <Table>

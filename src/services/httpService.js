@@ -57,6 +57,17 @@ instance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+instance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      Cookies.remove("adminInfo");
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
+
 const responseBody = (response) => response.data;
 
 const requests = {

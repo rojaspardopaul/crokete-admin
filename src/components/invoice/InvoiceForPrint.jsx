@@ -92,7 +92,7 @@ const InvoiceForPrint = ({ data, printRef, globalSetting }) => {
                         <span className="text-right font-bold text-gray-700 bill">
                           {" "}
                           {currency}
-                          {(item.price * item.quantity).toFixed(2)}
+                          {((item.originalPrice || item.price) * item.quantity).toFixed(2)}
                         </span>
                       </TableCell>
                     </TableRow>
@@ -219,7 +219,7 @@ const InvoiceForPrint = ({ data, printRef, globalSetting }) => {
                     <span>{t("GrossTotal")} :</span>{" "}
                     <span className="font-semibold ">
                       {currency}
-                      {parseFloat(or?.subTotal).toFixed(2)}
+                      {((or?.cart || []).reduce((acc, item) => acc + ((item.originalPrice || item.price) * item.quantity), 0)).toFixed(2)}
                     </span>
                   </h5>
 
@@ -329,7 +329,7 @@ const InvoiceForPrint = ({ data, printRef, globalSetting }) => {
                       <span className="text-right font-bold text-gray-700 bill">
                         {" "}
                         {currency}
-                        {(item.price * item.quantity).toFixed(2)}
+                        {((item.originalPrice || item.price) * item.quantity).toFixed(2)}
                       </span>
                     </TableCell>
                   </TableRow>
@@ -456,7 +456,7 @@ const InvoiceForPrint = ({ data, printRef, globalSetting }) => {
                   <span>{t("GrossTotal")} :</span>{" "}
                   <span className="font-semibold ">
                     {currency}
-                    {parseFloat(data?.subTotal).toFixed(2)}
+                    {((data?.cart || []).reduce((acc, item) => acc + ((item.originalPrice || item.price) * item.quantity), 0)).toFixed(2)}
                   </span>
                 </h5>
 

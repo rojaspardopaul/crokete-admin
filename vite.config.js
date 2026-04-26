@@ -10,9 +10,13 @@ import path from "path";
 
 dns.setDefaultResultOrder("verbatim");
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   // root: "./", // Set the root directory of your project
   // base: "/", // Set the base URL path for your application
+
+  esbuild: {
+    drop: mode === "production" ? ["console", "debugger"] : [],
+  },
 
   build: {
     outDir: "build", // comment this if you select vite as project when deploy
@@ -125,4 +129,4 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./src/setupTest.js"],
   },
-});
+}));

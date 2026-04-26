@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+﻿import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CustomPagination as Pagination } from "@/components/ui/pagination";
 import {
@@ -197,7 +197,7 @@ const ChildCategory = () => {
             {loading ? (
               <Loading loading={loading} />
             ) : error ? (
-              <span className="text-center mx-auto text-red-500">{error}</span>
+              <span className="text-center mx-auto text-red-500">{error?.message ?? error}</span>
             ) : serviceData?.length !== 0 ? (
               <div>
                 <TableContainer className="mb-8">

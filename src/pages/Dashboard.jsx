@@ -1,4 +1,4 @@
-import { CustomPagination as Pagination } from "@/components/ui/pagination";
+﻿import { CustomPagination as Pagination } from "@/components/ui/pagination";
 import {
   Table,
   TableBody,
@@ -395,7 +395,7 @@ const Dashboard = () => {
           {loadingRecentOrder ? (
             <TableLoading row={5} col={4} />
           ) : error ? (
-            <span className="text-center mx-auto text-red-500">{error}</span>
+            <span className="text-center mx-auto text-red-500">{error?.message ?? error}</span>
           ) : serviceData?.length !== 0 ? (
             <div>
               <TableContainer className="mb-8">
