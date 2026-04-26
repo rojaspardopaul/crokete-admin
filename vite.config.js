@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => ({
   },
 
   build: {
-    outDir: "build", // comment this if you select vite as project when deploy
+    outDir: "dist",
     assetsDir: "@/assets", // Set the directory for the static assets
     // sourcemap: process.env.__DEV__ === "true",
     rollupOptions: {
