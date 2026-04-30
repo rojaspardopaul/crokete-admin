@@ -467,7 +467,7 @@ const ProductDrawer = ({ id, aiInitialData, onAiDataConsumed }) => {
                   <InputValue
                     disabled={isCombination}
                     register={register}
-                    maxValue={8000}
+                    maxValue={999999}
                     minValue={1}
                     label="Original Price"
                     name="originalPrice"
