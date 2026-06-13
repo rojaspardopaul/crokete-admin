@@ -42,6 +42,7 @@ const AiProductModal = ({ isOpen, onClose, onProductGenerated }) => {
   const [additionalInfo, setAdditionalInfo] = useState("");
   const [images, setImages] = useState([]); // [{ dataUrl, name }]
   const [isGenerating, setIsGenerating] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
 
   const MAX_IMAGES = 6;
 
@@ -76,9 +77,8 @@ const AiProductModal = ({ isOpen, onClose, onProductGenerated }) => {
 
   // Compress images client-side and keep them as base64 data URLs.
   // They are sent to the AI for text extraction only — never uploaded to Cloudinary.
-  const handleFiles = async (e) => {
-    const files = Array.from(e.target.files || []);
-    e.target.value = ""; // allow re-selecting the same file
+  const processFiles = async (fileList) => {
+    const files = Array.from(fileList || []).filter((f) => f.type.startsWith("image/"));
     if (!files.length) return;
 
     const remaining = MAX_IMAGES - images.length;
@@ -102,6 +102,18 @@ const AiProductModal = ({ isOpen, onClose, onProductGenerated }) => {
     } catch (err) {
       notifyError("No se pudo procesar la imagen.");
     }
+  };
+
+  const handleFiles = (e) => {
+    processFiles(e.target.files);
+    e.target.value = ""; // allow re-selecting the same file
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragActive(false);
+    if (isGenerating) return;
+    processFiles(e.dataTransfer.files);
   };
 
   const removeImage = (idx) => {
@@ -155,6 +167,7 @@ const AiProductModal = ({ isOpen, onClose, onProductGenerated }) => {
     setCategoryId("");
     setPetType("dog");
     setImages([]);
+    setDragActive(false);
   };
 
   const noProviders = !providers.gemini && !providers.openai;
@@ -338,11 +351,27 @@ const AiProductModal = ({ isOpen, onClose, onProductGenerated }) => {
                 <span className="text-gray-400 font-normal">(opcional)</span>
               </label>
               <p className="mb-2 text-xs text-gray-400">
-                Adjunta fotos del empaque/etiqueta. La IA extrae el texto e información
-                automáticamente. Las imágenes NO se suben a Cloudinary.
+                Arrastra y suelta o haz clic para adjuntar fotos del empaque/etiqueta.
+                La IA extrae el texto e información automáticamente. Las imágenes NO se
+                suben a Cloudinary.
               </p>
 
-              <div className="flex flex-wrap gap-2">
+              <div
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  if (!isGenerating) setDragActive(true);
+                }}
+                onDragLeave={(e) => {
+                  e.preventDefault();
+                  setDragActive(false);
+                }}
+                onDrop={handleDrop}
+                className={`flex flex-wrap gap-2 rounded-md border-2 border-dashed p-3 transition-colors ${
+                  dragActive
+                    ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
+                    : "border-gray-200 dark:border-gray-700"
+                }`}
+              >
                 {images.map((img, idx) => (
                   <div key={idx} className="relative h-20 w-20 rounded border overflow-hidden group">
                     <img src={img.dataUrl} alt={img.name} className="h-full w-full object-cover" />
