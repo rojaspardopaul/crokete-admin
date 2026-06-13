@@ -16,7 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { FiZap, FiLoader } from "react-icons/fi";
+import { FiZap, FiLoader, FiImage, FiX } from "react-icons/fi";
+import imageCompression from "browser-image-compression";
 
 import useAsync from "@/hooks/useAsync";
 import { SidebarContext } from "@/context/SidebarContext";
@@ -39,7 +40,10 @@ const AiProductModal = ({ isOpen, onClose, onProductGenerated }) => {
   const [categoryId, setCategoryId] = useState("");
   const [petType, setPetType] = useState("dog");
   const [additionalInfo, setAdditionalInfo] = useState("");
+  const [images, setImages] = useState([]); // [{ dataUrl, name }]
   const [isGenerating, setIsGenerating] = useState(false);
+
+  const MAX_IMAGES = 6;
 
   // Available providers
   const [providers, setProviders] = useState({ gemini: false, openai: false });
@@ -70,9 +74,43 @@ const AiProductModal = ({ isOpen, onClose, onProductGenerated }) => {
     }
   }, [isOpen]);
 
+  // Compress images client-side and keep them as base64 data URLs.
+  // They are sent to the AI for text extraction only — never uploaded to Cloudinary.
+  const handleFiles = async (e) => {
+    const files = Array.from(e.target.files || []);
+    e.target.value = ""; // allow re-selecting the same file
+    if (!files.length) return;
+
+    const remaining = MAX_IMAGES - images.length;
+    if (remaining <= 0) return notifyError(`Máximo ${MAX_IMAGES} imágenes.`);
+    const toProcess = files.slice(0, remaining);
+    if (files.length > remaining) notifyError(`Solo se agregaron ${remaining}; máximo ${MAX_IMAGES}.`);
+
+    try {
+      const processed = await Promise.all(
+        toProcess.map(async (file) => {
+          const compressed = await imageCompression(file, {
+            maxSizeMB: 0.4,
+            maxWidthOrHeight: 1280,
+            useWebWorker: true,
+          });
+          const dataUrl = await imageCompression.getDataUrlFromFile(compressed);
+          return { dataUrl, name: file.name };
+        })
+      );
+      setImages((prev) => [...prev, ...processed]);
+    } catch (err) {
+      notifyError("No se pudo procesar la imagen.");
+    }
+  };
+
+  const removeImage = (idx) => {
+    setImages((prev) => prev.filter((_, i) => i !== idx));
+  };
+
   const handleGenerate = async () => {
-    if (!productName.trim()) {
-      return notifyError("Ingresa el nombre del producto");
+    if (!productName.trim() && images.length === 0) {
+      return notifyError("Ingresa el nombre del producto o adjunta una imagen");
     }
 
     setIsGenerating(true);
@@ -85,6 +123,7 @@ const AiProductModal = ({ isOpen, onClose, onProductGenerated }) => {
         categoryId: categoryId || undefined,
         petType,
         additionalInfo: additionalInfo.trim() || undefined,
+        images: images.length ? images.map((i) => i.dataUrl) : undefined,
       });
 
       if (result.success && result.product) {
@@ -115,6 +154,7 @@ const AiProductModal = ({ isOpen, onClose, onProductGenerated }) => {
     setBrandId("");
     setCategoryId("");
     setPetType("dog");
+    setImages([]);
   };
 
   const noProviders = !providers.gemini && !providers.openai;
@@ -290,6 +330,54 @@ const AiProductModal = ({ isOpen, onClose, onProductGenerated }) => {
                 Mientras más info proporciones, más preciso será el resultado.
               </p>
             </div>
+
+            {/* Image attachments for AI vision/OCR */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Imágenes del producto{" "}
+                <span className="text-gray-400 font-normal">(opcional)</span>
+              </label>
+              <p className="mb-2 text-xs text-gray-400">
+                Adjunta fotos del empaque/etiqueta. La IA extrae el texto e información
+                automáticamente. Las imágenes NO se suben a Cloudinary.
+              </p>
+
+              <div className="flex flex-wrap gap-2">
+                {images.map((img, idx) => (
+                  <div key={idx} className="relative h-20 w-20 rounded border overflow-hidden group">
+                    <img src={img.dataUrl} alt={img.name} className="h-full w-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(idx)}
+                      disabled={isGenerating}
+                      className="absolute top-0 right-0 bg-red-500 text-white rounded-bl p-0.5 opacity-90 hover:opacity-100"
+                      title="Quitar"
+                    >
+                      <FiX size={14} />
+                    </button>
+                  </div>
+                ))}
+
+                {images.length < MAX_IMAGES && (
+                  <label
+                    className={`h-20 w-20 flex flex-col items-center justify-center gap-1 rounded border border-dashed cursor-pointer text-gray-400 hover:text-emerald-600 hover:border-emerald-500 ${
+                      isGenerating ? "pointer-events-none opacity-50" : ""
+                    }`}
+                  >
+                    <FiImage size={20} />
+                    <span className="text-[10px]">Agregar</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      className="hidden"
+                      onChange={handleFiles}
+                      disabled={isGenerating}
+                    />
+                  </label>
+                )}
+              </div>
+            </div>
           </div>
         )}
 
@@ -307,7 +395,7 @@ const AiProductModal = ({ isOpen, onClose, onProductGenerated }) => {
           {!noProviders && (
             <Button
               onClick={handleGenerate}
-              disabled={isGenerating || !productName.trim()}
+              disabled={isGenerating || (!productName.trim() && images.length === 0)}
               className="bg-emerald-600 hover:bg-emerald-700 text-white"
             >
               {isGenerating ? (
