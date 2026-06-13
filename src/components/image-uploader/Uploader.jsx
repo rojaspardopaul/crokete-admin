@@ -1,191 +1,127 @@
 import React, { useEffect, useState } from "react";
 import { t } from "i18next";
-import axios from "axios";
 import { useDropzone } from "react-dropzone";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { FiUploadCloud, FiXCircle } from "react-icons/fi";
-import Pica from "pica";
+import imageCompression from "browser-image-compression";
 
 // Internal imports
 import useUtilsFunction from "@/hooks/useUtilsFunction";
 import { notifyError, notifySuccess } from "@/utils/toast";
 import Container from "@/components/image-uploader/Container";
+import UploadServices from "@/services/UploadServices";
 
-const Uploader = ({
-  setImageUrl,
-  imageUrl,
-  product,
-  folder = "crokete",
-  targetWidth = 1200, // Set default fixed width (1200 for sharp zoom)
-  targetHeight = 1200, // Set default fixed height (1200 for sharp zoom)
-}) => {
+const Uploader = ({ setImageUrl, imageUrl, product, folder = "crokete" }) => {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [err, setError] = useState("");
-  const pica = Pica(); // Initialize Pica instance
   const { globalSetting } = useUtilsFunction();
+
+  const maxImages = globalSetting?.number_of_image_per_product || 2;
 
   const { getRootProps, getInputProps, fileRejections } = useDropzone({
     accept: {
       "image/*": [".jpeg", ".jpg", ".png", ".webp", ".svg"],
     },
     multiple: product ? true : false,
-    maxSize: 5242880, // 5 MB in bytes
-    maxFiles: globalSetting?.number_of_image_per_product || 2,
+    maxSize: 10485760, // 10 MB (backend normaliza a webp 1000×1000)
+    maxFiles: maxImages,
     onDrop: async (acceptedFiles) => {
-      const resizedFiles = await Promise.all(
-        acceptedFiles.map((file) => {
-          // If file is SVG, return it without resizing
-          if (file.type === "image/svg+xml") {
-            return Promise.resolve(file);
+      if (!acceptedFiles?.length) return;
+
+      // Capacity check for multi-image (product) uploads
+      if (product && (imageUrl?.length || 0) + acceptedFiles.length > maxImages) {
+        return notifyError(`Máximo ${maxImages} imágenes por producto.`);
+      }
+
+      // Show transient previews while uploading
+      const withPreview = acceptedFiles.map((file) =>
+        Object.assign(file, { preview: URL.createObjectURL(file) })
+      );
+      setFiles(withPreview);
+
+      setLoading(true);
+      setError("Subiendo...");
+
+      for (const file of acceptedFiles) {
+        try {
+          const isSvg = file.type === "image/svg+xml";
+          // Light client-side compression to shrink the upload payload; the
+          // backend does the canonical webp + 1000×1000 normalization.
+          const dataUrl = isSvg
+            ? await imageCompression.getDataUrlFromFile(file)
+            : await imageCompression.getDataUrlFromFile(
+                await imageCompression(file, {
+                  maxWidthOrHeight: 1600,
+                  maxSizeMB: 1.5,
+                  useWebWorker: true,
+                })
+              );
+
+          const { url } = await UploadServices.uploadImage(dataUrl, {
+            folder,
+            square: !!product, // products → uniform square; logos → keep ratio
+          });
+
+          if (product) {
+            setImageUrl((prev) => [...(prev || []), url]);
+          } else {
+            setImageUrl(url);
           }
-          // For other image types, resize while maintaining aspect ratio
-          return resizeImageMaintainAspectRatio(file, targetWidth, targetHeight);
-        })
-      );
-      setFiles(
-        resizedFiles.map((file) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        )
-      );
+          notifySuccess("¡Imagen subida correctamente!");
+        } catch (error) {
+          console.error("upload error", error);
+          notifyError(
+            error?.response?.data?.message || "No se pudo subir la imagen."
+          );
+        }
+      }
+
+      setLoading(false);
+      setError("");
+      setFiles([]);
     },
   });
 
-  const resizeImageMaintainAspectRatio = async (file, maxWidth, maxHeight) => {
-    const img = new Image();
-    img.src = URL.createObjectURL(file);
-
-    await img.decode();
-
-    // Calculate aspect ratio
-    const aspectRatio = img.width / img.height;
-    let newWidth, newHeight;
-
-    // Always scale to fit within max dimensions while maintaining aspect ratio
-    const targetRatio = maxWidth / maxHeight;
-
-    if (aspectRatio > targetRatio) {
-      // Image is wider - limit by width
-      newWidth = Math.min(img.width, maxWidth);
-      newHeight = Math.round(newWidth / aspectRatio);
-    } else {
-      // Image is taller - limit by height
-      newHeight = Math.min(img.height, maxHeight);
-      newWidth = Math.round(newHeight * aspectRatio);
-    }
-
-    // Ensure we don't exceed max dimensions
-    if (newWidth > maxWidth) {
-      newWidth = maxWidth;
-      newHeight = Math.round(newWidth / aspectRatio);
-    }
-    if (newHeight > maxHeight) {
-      newHeight = maxHeight;
-      newWidth = Math.round(newHeight * aspectRatio);
-    }
-
-    const canvas = document.createElement("canvas");
-    canvas.width = newWidth;
-    canvas.height = newHeight;
-
-    return new Promise((resolve) => {
-      pica
-        .resize(img, canvas, {
-          unsharpAmount: 80,
-          unsharpRadius: 0.6,
-          unsharpThreshold: 2,
-        })
-        .then((result) => pica.toBlob(result, "image/webp", 1.0))
-        .then((blob) => {
-          // Replace original extension with .webp
-          const webpName = file.name.replace(/\.[^.]+$/, ".webp");
-          const resizedFile = new File([blob], webpName, { type: "image/webp" });
-          resolve(resizedFile);
-        });
-    });
-  };
-
   useEffect(() => {
-    if (fileRejections) {
-      fileRejections.map(({ file, errors }) => (
-        <li key={file.path}>
-          {file.path} - {file.size} bytes
-          <ul>
-            {errors.map((e) => (
-              <li key={e.code}>
-                {e.code === "too-many-files"
-                  ? notifyError(
-                      `Maximum ${globalSetting?.number_of_image_per_product} Image Can be Upload!`
-                    )
-                  : notifyError(e.message)}
-              </li>
-            ))}
-          </ul>
-        </li>
-      ));
-    }
-
-    if (files) {
-      files.forEach((file) => {
-        if (
-          product &&
-          imageUrl?.length + files?.length >
-            globalSetting?.number_of_image_per_product
-        ) {
-          return notifyError(
-            `Maximum ${globalSetting?.number_of_image_per_product} Image Can be Upload!`
-          );
-        }
-
-        setLoading(true);
-        setError("Uploading....");
-
-        const name = file.name.replaceAll(/\s/g, "");
-        const public_id = name?.substring(0, name.lastIndexOf("."));
-
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append(
-          "upload_preset",
-          import.meta.env.VITE_APP_CLOUDINARY_UPLOAD_PRESET
-        );
-        formData.append("cloud_name", import.meta.env.VITE_APP_CLOUD_NAME);
-        formData.append("folder", folder);
-        formData.append("public_id", public_id);
-
-        // Preserve format for SVG files
-        if (file.type === "image/svg+xml") {
-          formData.append("filename_override", `${public_id}.svg`);
-        }
-
-        axios({
-          url: import.meta.env.VITE_APP_CLOUDINARY_URL,
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          data: formData,
-        })
-          .then((res) => {
-            notifySuccess("Imagen subida exitosamente!");
-            setLoading(false);
-            if (product) {
-              setImageUrl((imgUrl) => [...imgUrl, res.data.secure_url]);
-            } else {
-              setImageUrl(res.data.secure_url);
-            }
-          })
-          .catch((err) => {
-            console.error("err", err);
-            notifyError(err.Message);
-            setLoading(false);
-          });
+    if (fileRejections?.length) {
+      fileRejections.forEach(({ errors }) => {
+        errors.forEach((e) => {
+          if (e.code === "too-many-files") {
+            notifyError(`Máximo ${maxImages} imágenes por producto.`);
+          } else if (e.code === "file-too-large") {
+            notifyError("La imagen supera el tamaño máximo (10 MB).");
+          } else {
+            notifyError(e.message);
+          }
+        });
       });
     }
-  }, [files]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fileRejections]);
+
+  useEffect(
+    () => () => {
+      files.forEach((file) => file.preview && URL.revokeObjectURL(file.preview));
+    },
+    [files]
+  );
+
+  const handleRemoveImage = async (img) => {
+    try {
+      setLoading(false);
+      notifyError("Imagen eliminada!");
+      if (product) {
+        setImageUrl((prev) => (prev || []).filter((i) => i !== img));
+      } else {
+        setImageUrl("");
+      }
+    } catch (error) {
+      console.error("err", error);
+      notifyError("No se pudo eliminar la imagen.");
+    }
+  };
 
   const thumbs = files.map((file) => (
     <div key={file.name}>
@@ -198,30 +134,6 @@ const Uploader = ({
       </div>
     </div>
   ));
-
-  useEffect(
-    () => () => {
-      files.forEach((file) => URL.revokeObjectURL(file.preview));
-    },
-    [files]
-  );
-
-  const handleRemoveImage = async (img) => {
-    try {
-      setLoading(false);
-      notifyError("Imagen eliminada!");
-      if (product) {
-        const result = imageUrl?.filter((i) => i !== img);
-        setImageUrl(result);
-      } else {
-        setImageUrl("");
-      }
-    } catch (err) {
-      console.error("err", err);
-      notifyError(err.Message);
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="w-full text-center">
@@ -244,7 +156,7 @@ const Uploader = ({
             <Container
               setImageUrl={setImageUrl}
               imageUrl={imageUrl}
-              handleRemoveImage={handleRemoveImage}              
+              handleRemoveImage={handleRemoveImage}
             />
           </DndProvider>
         ) : !product && imageUrl ? (
