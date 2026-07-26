@@ -23,8 +23,6 @@ const StoreSetting = () => {
     setEnabledCOD,
     enabledStripe,
     setEnabledStripe,
-    enabledRazorPay,
-    setEnabledRazorPay,
     enabledFbPixel,
     setEnableFbPixel,
     enabledTawkChat,
@@ -132,56 +130,6 @@ const StoreSetting = () => {
                         placeholder={t("StripeSecret")}
                       />
                       <Error errorName={errors.stripe_secret} />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid md:grid-cols-5 items-center sm:grid-cols-12 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-                  <Label label="Habilitar RazorPay" />
-                  <div className="sm:col-span-4">
-                    <SwitchToggle
-                      id="razorpay"
-                      processOption={enabledRazorPay}
-                      handleProcess={setEnabledRazorPay}
-                    />
-                  </div>
-                </div>
-
-                <div
-                  style={{
-                    height: enabledRazorPay ? "auto" : 0,
-                    transition: "all .6s",
-                    visibility: !enabledRazorPay ? "hidden" : "visible",
-                    opacity: !enabledRazorPay ? "0" : "1",
-                  }}
-                  className={`${enabledRazorPay ? "mb-8" : "mb-2"}`}
-                >
-                  <div className="grid md:grid-cols-5 items-center sm:grid-cols-12 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-                    <Label label="RazorPay ID" />
-                    <div className="sm:col-span-4">
-                      <InputAreaTwo
-                        required={enabledRazorPay}
-                        register={register}
-                        label="RazorPay ID"
-                        name="razorpay_id"
-                        type="password"
-                        placeholder="RazorPay ID"
-                      />
-                      <Error errorName={errors.razorpay_id} />
-                    </div>
-                  </div>
-                  <div className="grid md:grid-cols-5 items-center sm:grid-cols-12 gap-3 md:gap-5 xl:gap-6 lg:gap-6">
-                    <Label label="RazorPay Secret" />
-                    <div className="sm:col-span-4">
-                      <InputAreaTwo
-                        required={enabledRazorPay}
-                        register={register}
-                        label="RazorPay Secret"
-                        name="razorpay_secret"
-                        type="password"
-                        placeholder="RazorPay Secret"
-                      />
-                      <Error errorName={errors.razorpay_secret} />
                     </div>
                   </div>
                 </div>

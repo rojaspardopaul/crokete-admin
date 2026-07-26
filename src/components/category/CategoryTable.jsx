@@ -44,7 +44,7 @@ const CategoryTable = ({ categories, showChild }) => {
               ) : (
                 <Avatar className="hidden p-1 mr-2 md:block bg-gray-50 shadow-none">
                   <AvatarImage
-                    src="https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png"
+                    src="/placeholder.png"
                     alt="product"
                   />
                   <AvatarFallback>C</AvatarFallback>

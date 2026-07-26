@@ -47,7 +47,7 @@ const ProductTable = ({ products }) => {
                 ) : (
                   <Avatar>
                     <AvatarImage
-                      src={`https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png`}
+                      src={`/placeholder.png`}
                       alt="product"
                     />
                     <AvatarFallback>P</AvatarFallback>

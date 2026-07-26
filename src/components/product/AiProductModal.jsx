@@ -76,7 +76,7 @@ const AiProductModal = ({ isOpen, onClose, onProductGenerated }) => {
   }, [isOpen]);
 
   // Compress images client-side and keep them as base64 data URLs.
-  // They are sent to the AI for text extraction only — never uploaded to Cloudinary.
+  // Sólo se envían a la IA para extraer el texto: nunca se almacenan.
   const processFiles = async (fileList) => {
     const files = Array.from(fileList || []).filter((f) => f.type.startsWith("image/"));
     if (!files.length) return;
@@ -352,8 +352,8 @@ const AiProductModal = ({ isOpen, onClose, onProductGenerated }) => {
               </label>
               <p className="mb-2 text-xs text-gray-400">
                 Arrastra y suelta o haz clic para adjuntar fotos del empaque/etiqueta.
-                La IA extrae el texto e información automáticamente. Las imágenes NO se
-                suben a Cloudinary.
+                La IA extrae el texto e información automáticamente. Las imágenes NO
+                se almacenan.
               </p>
 
               <div
