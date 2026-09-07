@@ -72,13 +72,13 @@ const ChildAttributes = () => {
   } = useQuery({
     queryKey: [
       "attributes",
-      { type: "attribute", option: "Dropdown", option1: "Radio" },
+      { type: "attribute", option: "dropdown", option1: "radio" },
     ],
     queryFn: () =>
       AttributeServices.getAllAttributes({
         type: "attribute",
-        option: "Dropdown",
-        option1: "Radio",
+        option: "dropdown",
+        option1: "radio",
       }),
     staleTime: 10 * 60 * 1000,
     gcTime: 15 * 60 * 1000,
